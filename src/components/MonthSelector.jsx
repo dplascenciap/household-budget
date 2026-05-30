@@ -1,0 +1,32 @@
+const MONTHS = ['January','February','March','April','May','June',
+                 'July','August','September','October','November','December']
+
+// month: 'YYYY-MM'
+export default function MonthSelector({ month, onChange }) {
+  const [year, m] = month.split('-').map(Number)
+  const label = `${MONTHS[m - 1]} ${year}`
+
+  function prev() {
+    const d = new Date(year, m - 2, 1)
+    onChange(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+  }
+
+  function next() {
+    const d = new Date(year, m, 1)
+    onChange(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+  }
+
+  // Don't allow navigating into the future beyond current month
+  const now = new Date()
+  const isCurrentOrFuture = year > now.getFullYear() ||
+    (year === now.getFullYear() && m >= now.getMonth() + 1)
+
+  return (
+    <div className="month-selector">
+      <button className="btn-month" onClick={prev}>‹</button>
+      <h2>{label}</h2>
+      <button className="btn-month" onClick={next} disabled={isCurrentOrFuture}
+        style={{ opacity: isCurrentOrFuture ? .3 : 1 }}>›</button>
+    </div>
+  )
+}
