@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { onAuthStateChanged, signOut, getRedirectResult } from 'firebase/auth'
 import { auth, ALLOWED_EMAILS } from './firebase/config'
 import Login from './components/Login'
 import Header from './components/Header'
@@ -10,6 +10,8 @@ export default function App() {
   const [allowed, setAllowed] = useState(false)
 
   useEffect(() => {
+    // Handle redirect result from mobile sign-in
+    getRedirectResult(auth).catch(() => {})
     return onAuthStateChanged(auth, u => {
       setUser(u)
       setAllowed(u ? ALLOWED_EMAILS.includes(u.email) : false)

@@ -1,6 +1,9 @@
 import { useState } from 'react'
-import { signInWithPopup } from 'firebase/auth'
+import { signInWithPopup, signInWithRedirect } from 'firebase/auth'
 import { auth, provider } from '../firebase/config'
+
+// In-app browsers (WhatsApp, Instagram, etc.) block popups — use redirect instead
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
 export default function Login() {
   const [error, setError] = useState('')
@@ -8,7 +11,11 @@ export default function Login() {
   async function handleSignIn() {
     try {
       setError('')
-      await signInWithPopup(auth, provider)
+      if (isMobile) {
+        await signInWithRedirect(auth, provider)
+      } else {
+        await signInWithPopup(auth, provider)
+      }
     } catch (e) {
       setError('Sign-in failed. Please try again.')
     }
