@@ -355,6 +355,65 @@ body {
 .access-denied { margin-top: 16px; font-size: .85rem; color: var(--danger); background: #fef2f2; padding: 12px; border-radius: 8px; }
 
 /* ── Responsive ────────────────────────────────────────────── */
+/* ── Chart tabs ─────────────────────────────────────────────── */
+.chart-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.chart-tab {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .2s;
+  white-space: nowrap;
+}
+.chart-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.chart-tab:hover:not(.active) { background: var(--border); }
+
+/* ── Custom confirm dialog ──────────────────────────────────── */
+.confirm-modal {
+  max-width: 320px;
+  text-align: center;
+  border-radius: var(--radius) !important;
+}
+.confirm-message {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+  line-height: 1.4;
+}
+.btn-danger {
+  flex: 1;
+  padding: 12px;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-danger:hover { background: #b91c1c; }
+
+/* ── Over-budget label ──────────────────────────────────────── */
+.over-label {
+  font-weight: 700;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .summary-grid { grid-template-columns: 1fr 1fr; }
   .grid-2       { grid-template-columns: 1fr; }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { subscribeToExpenses } from '../firebase/db'
 import MonthSelector from './MonthSelector'
 import SummaryCards from './SummaryCards'
-import CategoryChart from './CategoryChart'
+import ChartPanel from './ChartPanel'
 import BudgetProgress from './BudgetProgress'
 import ExpenseList from './ExpenseList'
 import ExpenseForm from './ExpenseForm'
@@ -40,7 +40,7 @@ export default function Dashboard({ user }) {
           <SummaryCards totalSpent={totalSpent} />
 
           <div className="grid-2">
-            <CategoryChart expenses={expenses} />
+            <ChartPanel expenses={expenses} month={month} />
             <BudgetProgress expenses={expenses} />
           </div>
 
@@ -48,7 +48,6 @@ export default function Dashboard({ user }) {
         </>
       )}
 
-      {/* Floating Add button */}
       <button className="fab" onClick={() => setShowForm(true)} title="Add expense">＋</button>
 
       {showForm && <ExpenseForm user={user} onClose={() => setShowForm(false)} />}

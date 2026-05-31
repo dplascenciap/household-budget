@@ -3,7 +3,6 @@ import { CATEGORIES, MONTHLY_BUDGET, CATEGORY_COLORS } from '../data/budgets'
 function fmt(n) { return '$' + n.toLocaleString('en-CA', { minimumFractionDigits: 0 }) }
 
 export default function BudgetProgress({ expenses }) {
-  // Sum spent per category
   const spent = expenses.reduce((acc, e) => {
     acc[e.category] = (acc[e.category] || 0) + e.amount
     return acc
@@ -14,10 +13,12 @@ export default function BudgetProgress({ expenses }) {
       <div className="card-title">Budget Progress</div>
       <div className="progress-list">
         {CATEGORIES.map(cat => {
-          const budget  = MONTHLY_BUDGET[cat] || 0
+          const budget   = MONTHLY_BUDGET[cat] || 0
           const catSpent = spent[cat] || 0
-          const pct     = budget > 0 ? Math.min((catSpent / budget) * 100, 100) : 0
-          const status  = pct >= 100 ? 'over' : pct >= 80 ? 'warning' : 'ok'
+          const over     = catSpent > budget
+          const pct      = budget > 0 ? Math.min((catSpent / budget) * 100, 100) : 0
+          const status   = pct >= 100 ? 'over' : pct >= 80 ? 'warning' : 'ok'
+          const overage  = catSpent - budget
 
           return (
             <div key={cat} className="progress-item">
@@ -26,8 +27,11 @@ export default function BudgetProgress({ expenses }) {
                   <span className="cat-dot" style={{ background: CATEGORY_COLORS[cat] }} />
                   {cat}
                 </span>
-                <span className="progress-amounts">
+                <span className="progress-amounts" style={over ? { color: 'var(--danger)' } : {}}>
                   <strong>{fmt(catSpent)}</strong> / {fmt(budget)}
+                  {over && (
+                    <span className="over-label"> · over by {fmt(overage)}</span>
+                  )}
                 </span>
               </div>
               <div className="progress-bar">

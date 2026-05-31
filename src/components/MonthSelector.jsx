@@ -16,17 +16,17 @@ export default function MonthSelector({ month, onChange }) {
     onChange(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
   }
 
-  // Don't allow navigating into the future beyond current month
+  // Allow up to 12 months into the future
   const now = new Date()
-  const isCurrentOrFuture = year > now.getFullYear() ||
-    (year === now.getFullYear() && m >= now.getMonth() + 1)
+  const maxDate = new Date(now.getFullYear(), now.getMonth() + 12, 1)
+  const isTooFar = new Date(year, m, 1) > maxDate
 
   return (
     <div className="month-selector">
       <button className="btn-month" onClick={prev}>‹</button>
       <h2>{label}</h2>
-      <button className="btn-month" onClick={next} disabled={isCurrentOrFuture}
-        style={{ opacity: isCurrentOrFuture ? .3 : 1 }}>›</button>
+      <button className="btn-month" onClick={next} disabled={isTooFar}
+        style={{ opacity: isTooFar ? .3 : 1 }}>›</button>
     </div>
   )
 }
