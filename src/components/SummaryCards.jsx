@@ -1,19 +1,17 @@
-import { TOTAL_BUDGET } from '../data/budgets'
-
 function fmt(n) {
   return '$' + Math.abs(n).toLocaleString('en-CA', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
 }
 
-export default function SummaryCards({ totalSpent }) {
-  const remaining = TOTAL_BUDGET - totalSpent
-  const pct       = Math.min((totalSpent / TOTAL_BUDGET) * 100, 100)
-  const over      = totalSpent > TOTAL_BUDGET
+export default function SummaryCards({ totalSpent, totalBudget }) {
+  const remaining = totalBudget - totalSpent
+  const pct       = totalBudget > 0 ? Math.min((totalSpent / totalBudget) * 100, 100) : 0
+  const over      = totalSpent > totalBudget
 
   return (
     <div className="summary-grid">
       <div className="summary-card">
         <div className="label">Monthly Budget</div>
-        <div className="value">{fmt(TOTAL_BUDGET)}</div>
+        <div className="value">{fmt(totalBudget)}</div>
       </div>
       <div className="summary-card">
         <div className="label">Spent So Far</div>

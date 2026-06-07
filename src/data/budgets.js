@@ -1,7 +1,8 @@
-// Proposed monthly budget targets (from financial analysis, May 2026)
-// Update these numbers here as your situation changes.
+// Monthly budget targets — v1.2 restructure
+// Edit here and commit to update budget targets.
 
 export const CATEGORIES = [
+  'Rent',
   'Housing',
   'Transportation',
   'Groceries',
@@ -13,28 +14,47 @@ export const CATEGORIES = [
   'Subscriptions',
   'Fixed Bills',
   'KOHO Savings',
+  'Government & Legal',
+  'Emergency / Unexpected',
   'Other',
 ]
 
+// 0 = unbudgeted (irregular, unexpected). These show as "Unbudgeted" in the UI.
 export const MONTHLY_BUDGET = {
-  'Housing':                2771,
-  'Transportation':         1152,
+  'Rent':                   2680,   // landlord cheque
+  'Housing':                 115,   // utilities $91 + rent insurance (Belair) $24.14
+  'Transportation':          590,   // car insurance (Belair) $172.29 + gas $188 + parking $70 + transit $120 + car wash $40
   'Groceries':               900,
   'Dining Out':              550,
   'Baby & Family':           371,
   'Personal Care & Health':  315,
   'Shopping & Household':    198,
   'Mexico Support':          154,
-  'Subscriptions':            92,
-  'Fixed Bills':             276,
-  'KOHO Savings':           1777,
+  'Subscriptions':            70,   // Spotify $20 + Prime $11 + Grammarly $17 + CodeScreen $17 + Nintendo avg $11 (KOHO plan now free)
+  'Fixed Bills':             792,   // car loan $604 + RBC insurance $40 + Bell $76 + Fido $72
+  'KOHO Savings':           1777,   // Moving Fund + Travel + Taxes + Emergency + Bbud
+  'Government & Legal':        0,   // unbudgeted — immigration, legal fees, related travel
+  'Emergency / Unexpected':    0,   // unbudgeted — one-off unexpected expenses
   'Other':                    75,
 }
 
-export const TOTAL_BUDGET = Object.values(MONTHLY_BUDGET).reduce((s, v) => s + v, 0)
+// Total budget — excludes unbudgeted (0) categories
+export const TOTAL_BUDGET = Object.entries(MONTHLY_BUDGET)
+  .filter(([, v]) => v > 0)
+  .reduce((s, [, v]) => s + v, 0)
 
-// One color per category — used in charts and badges
+// Categories excluded from the Weekly Health Check
+// (monthly fixed costs that don't make sense on a weekly basis)
+export const WEEKLY_EXCLUDE = new Set([
+  'Rent',
+  'Fixed Bills',
+  'KOHO Savings',
+  'Government & Legal',
+  'Emergency / Unexpected',
+])
+
 export const CATEGORY_COLORS = {
+  'Rent':                   '#0f172a',
   'Housing':                '#1e3a5f',
   'Transportation':         '#2563eb',
   'Groceries':              '#16a34a',
@@ -46,5 +66,7 @@ export const CATEGORY_COLORS = {
   'Subscriptions':          '#4f46e5',
   'Fixed Bills':            '#64748b',
   'KOHO Savings':           '#059669',
+  'Government & Legal':     '#b45309',
+  'Emergency / Unexpected': '#9f1239',
   'Other':                  '#94a3b8',
 }

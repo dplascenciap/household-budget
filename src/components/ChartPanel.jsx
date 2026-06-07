@@ -7,7 +7,7 @@ const TABS = [
   { id: 'daily',    label: '📈 Daily Trend'  },
 ]
 
-export default function ChartPanel({ expenses, month }) {
+export default function ChartPanel({ expenses, month, totalBudget }) {
   const [active, setActive] = useState('category')
 
   return (
@@ -26,7 +26,7 @@ export default function ChartPanel({ expenses, month }) {
 
       {active === 'category'
         ? <CategoryChart expenses={expenses} />
-        : <DailySpendChart expenses={expenses} month={month} />
+        : <DailySpendChart expenses={expenses} month={month} totalBudget={totalBudget} />
       }
     </div>
   )

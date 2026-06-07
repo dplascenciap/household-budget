@@ -2,7 +2,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ReferenceLine, ResponsiveContainer,
 } from 'recharts'
-import { TOTAL_BUDGET } from '../data/budgets'
+import { TOTAL_BUDGET as DEFAULT_BUDGET } from '../data/budgets'
 
 function daysInMonth(month) {
   const [y, m] = month.split('-').map(Number)
@@ -45,7 +45,8 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-export default function DailySpendChart({ expenses, month }) {
+export default function DailySpendChart({ expenses, month, totalBudget }) {
+  const budgetLine = totalBudget || DEFAULT_BUDGET
   const data    = buildData(expenses, month)
   const hasData = expenses.length > 0
 
@@ -81,7 +82,7 @@ export default function DailySpendChart({ expenses, month }) {
               />
               <Tooltip content={<CustomTooltip />} />
               <ReferenceLine
-                y={TOTAL_BUDGET}
+                y={budgetLine}
                 stroke="#dc2626"
                 strokeDasharray="5 3"
                 strokeWidth={1.5}

@@ -6,22 +6,22 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 
 ## Changelog
 
+### v1.2 — June 2026
+- **Multi-page navigation** — bottom nav bar with Dashboard and Weekly Check
+- **Category drill-down** — click any budget category to see its expense breakdown and merchant donut chart
+- **Weekly health check** — Mon–Sun view with per-category status; navigate to previous weeks
+- **Rent toggle** — hide rent from charts/budget to see discretionary spending only
+- **Budget restructured** — Rent is now its own category; car loan moved to Fixed Bills; Transportation now reflects true running costs; KOHO plan removed (Miranda employee benefit); Government & Legal and Emergency / Unexpected added as unbudgeted categories
+- **Kia loan update** — Kia Finance confirmed extra payments apply directly to principal; recommended switching from KOHO accumulation to direct monthly extra payments
+
 ### v1.1 — June 2026
 - **Future months** — navigate up to 12 months ahead to enter proactive expenses (rent, fixed bills, etc.)
 - **App version** — title updated to "Household Budget Plascencia-Frisbee v1.1"
-- **Custom delete dialog** — replaced browser-native confirm prompt with an in-app dialog ("Household Budget says…" no more)
+- **Custom delete dialog** — replaced browser-native confirm prompt with an in-app dialog
 - **Over-budget display** — categories that exceed budget now show `$1,000 / $900 · over by $100` in red
 - **Daily Trend chart** — new cumulative area chart showing spending day by day against the monthly budget limit
-- **Chart tabs** — switch between "By Category" (donut) and "Daily Trend" charts with tab navigation
+- **Chart tabs** — switch between "By Category" (donut) and "Daily Trend" charts
 - **iOS Safari fix** — resolved Google sign-in redirect_uri_mismatch for iPhone users
-
-### v1.2 — Planned
-- Multi-page navigation (Dashboard, Categories, Weekly Check)
-- Category detail page with expense breakdown and chart
-- Weekly spending health check
-- Housing toggle — exclude rent from charts to see remaining budget split
-- Updated budget targets and category restructuring
-- Emergency / Unexpected expenses category
 
 ### v1.0 — May 2026
 - Initial release

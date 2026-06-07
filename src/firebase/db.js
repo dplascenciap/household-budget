@@ -18,6 +18,22 @@ export function subscribeToExpenses(month, callback) {
   })
 }
 
+// Real-time listener for a date range (weekly check)
+// monday / sunday: 'YYYY-MM-DD' strings
+export function subscribeToWeekExpenses(monday, sunday, callback) {
+  const q = query(
+    expensesRef(),
+    where('date', '>=', monday),
+    where('date', '<=', sunday),
+  )
+  return onSnapshot(q, snapshot => {
+    const expenses = snapshot.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.date > a.date ? 1 : -1))
+    callback(expenses)
+  })
+}
+
 // Add a new expense
 export async function addExpense({ amount, category, description, date, addedBy }) {
   return addDoc(expensesRef(), {
