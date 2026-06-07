@@ -7,23 +7,45 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 ## Changelog
 
 ### v1.2 — June 2026
+
+#### Features
 - **Multi-page navigation** — bottom nav bar with Dashboard and Weekly Check
 - **Category drill-down** — click any budget category to see its expense breakdown and merchant donut chart
 - **Weekly health check** — Mon–Sun view with per-category status; navigate to previous weeks
 - **Rent toggle** — hide rent from charts/budget to see discretionary spending only
-- **Budget restructured** — Rent is now its own category; car loan moved to Fixed Bills; Transportation now reflects true running costs; KOHO plan removed (Miranda employee benefit); Government & Legal and Emergency / Unexpected added as unbudgeted categories
-- **Kia loan update** — Kia Finance confirmed extra payments apply directly to principal; recommended switching from KOHO accumulation to direct monthly extra payments
+- **Budget restructured** — Rent is now its own category; car loan moved to Fixed Bills; Transportation reflects true running costs; KOHO plan removed (Miranda employee benefit); Government & Legal and Emergency / Unexpected added as unbudgeted categories
+- **Kia loan** — Kia Finance confirmed extra payments apply directly to principal; recommended switching from KOHO accumulation to direct monthly extra payments
+- **PWA home screen icons** — proper house icon on both Android and iPhone when added to home screen; web app manifest added
+- **Donut chart legend** — moved outside the chart into a 2-column grid below; fixes mobile cropping
+
+#### Bug fixes
+- 🐛 **404 on direct URL access** — added SPA catch-all rewrite in `vercel.json` so React Router routes work correctly on Vercel
+- 🐛 **Groceries excluded from Weekly Check** — bulk Costco purchases skewed the weekly comparison; Groceries is now monthly-only
+- 🐛 **Whitespace trimming** — all expense fields (description, category, addedBy) are trimmed before saving; prevents duplicate merchant groupings in charts
+- 🐛 **Version label** — header updated from v1.1 to v1.2
+- 🐛 **Save button hidden by keyboard** — sticky Save button always visible above keyboard on both Android and iPhone; uses `dvh` units + `visualViewport` API fallback for iOS
+
+---
 
 ### v1.1 — June 2026
+
+#### Features
 - **Future months** — navigate up to 12 months ahead to enter proactive expenses (rent, fixed bills, etc.)
 - **App version** — title updated to "Household Budget Plascencia-Frisbee v1.1"
 - **Custom delete dialog** — replaced browser-native confirm prompt with an in-app dialog
 - **Over-budget display** — categories that exceed budget now show `$1,000 / $900 · over by $100` in red
-- **Daily Trend chart** — new cumulative area chart showing spending day by day against the monthly budget limit
+- **Daily Trend chart** — cumulative area chart showing spending day by day against the monthly budget limit
 - **Chart tabs** — switch between "By Category" (donut) and "Daily Trend" charts
-- **iOS Safari fix** — resolved Google sign-in redirect_uri_mismatch for iPhone users
+
+#### Bug fixes
+- 🐛 **iOS Safari sign-in** — resolved Google sign-in `redirect_uri_mismatch` for iPhone users
+- 🐛 **WhatsApp in-app browser** — switched to `signInWithRedirect` on mobile to support sign-in from in-app browsers
+
+---
 
 ### v1.0 — May 2026
+
+#### Features
 - Initial release
 - Google Sign-in authentication (whitelist: David + Miranda)
 - Real-time expense tracking via Firebase Firestore
