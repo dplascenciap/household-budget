@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { CATEGORY_COLORS } from '../data/budgets'
 
 function fmt(v) { return `$${v.toLocaleString('en-CA', { minimumFractionDigits: 0 })}` }
@@ -35,8 +35,10 @@ export default function CategoryChart({ expenses }) {
   return (
     <div className="card chart-card">
       <div className="card-title">Spending by Category</div>
+
+      {/* Donut — legend removed from inside, no more cropping */}
       <div className="chart-wrap">
-        <ResponsiveContainer width="100%" height={230}>
+        <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
               data={data}
@@ -52,13 +54,19 @@ export default function CategoryChart({ expenses }) {
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
-            <Legend
-              formatter={(value) => <span style={{ fontSize: '.75rem', color: '#1e293b' }}>{value}</span>}
-              iconSize={8}
-              iconType="circle"
-            />
           </PieChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Custom 2-column legend below the chart */}
+      <div className="chart-legend">
+        {data.map(item => (
+          <div key={item.name} className="chart-legend-item">
+            <span className="chart-legend-dot" style={{ background: item.color }} />
+            <span className="chart-legend-name">{item.name}</span>
+            <span className="chart-legend-value">{fmt(item.value)}</span>
+          </div>
+        ))}
       </div>
     </div>
   )

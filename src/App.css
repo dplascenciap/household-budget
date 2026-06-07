@@ -355,6 +355,43 @@ body {
 .access-denied { margin-top: 16px; font-size: .85rem; color: var(--danger); background: #fef2f2; padding: 12px; border-radius: 8px; }
 
 /* ── Responsive ────────────────────────────────────────────── */
+/* ── Chart custom legend ────────────────────────────────────── */
+.chart-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.chart-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.chart-legend-name {
+  font-size: .72rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+.chart-legend-value {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
 /* ── Chart tabs ─────────────────────────────────────────────── */
 .chart-tabs {
   display: flex;
