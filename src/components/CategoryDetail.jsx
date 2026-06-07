@@ -101,7 +101,12 @@ export default function CategoryDetail() {
     <div>
       {/* Back + title */}
       <div className="detail-header">
-        <button className="btn-back" onClick={() => navigate(-1)}>← Back</button>
+        <button className="btn-back" onClick={() => navigate(-1)}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          Back
+        </button>
         <div className="detail-cat-name">
           <span className="cat-dot-lg" style={{background: color}} />
           {category}

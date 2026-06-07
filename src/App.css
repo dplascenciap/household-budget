@@ -565,14 +565,21 @@ body {
   margin-bottom: 16px;
 }
 .btn-back {
-  background: none;
-  border: none;
-  font-size: .9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px 7px 10px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: .85rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--text);
   cursor: pointer;
-  padding: 6px 0;
+  box-shadow: var(--shadow-sm);
+  transition: background .15s, box-shadow .15s;
 }
+.btn-back:hover { background: var(--bg); box-shadow: none; }
 .detail-cat-name {
   display: flex;
   align-items: center;

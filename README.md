@@ -19,6 +19,7 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 - **Donut chart legend** — moved outside the chart into a 2-column grid below; fixes mobile cropping
 
 #### Bug fixes
+- 🐛 **Back button redesign** — replaced mismatched Unicode arrow with a pill-style button and SVG chevron, consistent with the rest of the UI
 - 🐛 **404 on direct URL access** — added SPA catch-all rewrite in `vercel.json` so React Router routes work correctly on Vercel
 - 🐛 **Groceries excluded from Weekly Check** — bulk Costco purchases skewed the weekly comparison; Groceries is now monthly-only
 - 🐛 **Whitespace trimming** — all expense fields (description, category, addedBy) are trimmed before saving; prevents duplicate merchant groupings in charts
