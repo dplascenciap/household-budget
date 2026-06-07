@@ -51,6 +51,7 @@ export const WEEKLY_EXCLUDE = new Set([
   'KOHO Savings',
   'Government & Legal',
   'Emergency / Unexpected',
+  'Groceries',  // bulk buying (Costco) makes week-to-week comparison misleading
 ])
 
 export const CATEGORY_COLORS = {
