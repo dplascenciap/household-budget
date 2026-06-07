@@ -267,6 +267,33 @@ body {
 @media (min-width: 640px) {
   .modal { border-radius: var(--radius); box-shadow: var(--shadow); }
 }
+
+/* Keyboard-aware modal — dvh shrinks when keyboard opens (Android + iOS 15.4+)
+   visualViewport hook handles older iOS as fallback                            */
+.modal-keyboard-aware {
+  --keyboard-offset: 0px;
+  max-height: calc(90dvh - var(--keyboard-offset));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Shift up by keyboard offset for iOS where dvh may not update */
+  transform: translateY(calc(-1 * var(--keyboard-offset)));
+  transition: transform 0.2s ease, max-height 0.2s ease;
+}
+.modal-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+.modal-actions-sticky {
+  flex-shrink: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  margin-top: 0;
+}
+
 .modal-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
 .form-group { margin-bottom: 16px; }
 .form-label { display: block; font-size: .8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .4px; }
