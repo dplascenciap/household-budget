@@ -3,6 +3,10 @@
     {
       "source": "/__/auth/:path*",
       "destination": "https://sugg-household-budget.firebaseapp.com/__/auth/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
