@@ -38,11 +38,11 @@ export function subscribeToWeekExpenses(monday, sunday, callback) {
 export async function addExpense({ amount, category, description, date, addedBy }) {
   return addDoc(expensesRef(), {
     amount:      parseFloat(amount),
-    category,
-    description: description || '',
-    date,                          // YYYY-MM-DD
-    month:       date.slice(0, 7), // YYYY-MM
-    addedBy,
+    category:    category.trim(),
+    description: (description || '').trim(),
+    date:        date.trim(),
+    month:       date.trim().slice(0, 7), // YYYY-MM
+    addedBy:     addedBy.trim(),
     createdAt:   serverTimestamp(),
   })
 }
