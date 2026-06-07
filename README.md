@@ -15,6 +15,14 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 - **Chart tabs** — switch between "By Category" (donut) and "Daily Trend" charts with tab navigation
 - **iOS Safari fix** — resolved Google sign-in redirect_uri_mismatch for iPhone users
 
+### v1.2 — Planned
+- Multi-page navigation (Dashboard, Categories, Weekly Check)
+- Category detail page with expense breakdown and chart
+- Weekly spending health check
+- Housing toggle — exclude rent from charts to see remaining budget split
+- Updated budget targets and category restructuring
+- Emergency / Unexpected expenses category
+
 ### v1.0 — May 2026
 - Initial release
 - Google Sign-in authentication (whitelist: David + Miranda)
