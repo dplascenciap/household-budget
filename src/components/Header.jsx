@@ -5,7 +5,7 @@ export default function Header({ user, onSignOut }) {
     <header className="header">
       <div className="header-brand">
         🏠 Household Budget
-        <span>Plascencia-Frisbee v1.1</span>
+        <span>Plascencia-Frisbee v1.2</span>
       </div>
       <div className="header-right">
         <span className="header-user">👤 {firstName}</span>
