@@ -6,6 +6,22 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 
 ## Changelog
 
+### v1.3 — June 2026
+
+#### Features
+- **Edit expenses** — tap ✏️ on any transaction to edit amount, category, description, or date in place
+- **Refund entry** — add/edit form now has an Expense / Refund segmented toggle; refunds appear in green with a ↩ badge and reduce category spending automatically
+- **Groceries renamed** — "Groceries" is now "Groceries & Household" to reflect that personal care items bought at Costco/Walmart belong here; existing data migrated
+- **Hide Rent moved** — toggle now lives inside the chart card header next to the chart tabs, contextually next to what it affects
+- **Nav bar always visible** — fixed iOS Chrome overlap and PWA mode disappearing nav; rebuilt on flex layout with safe-area support for iPhone home indicator
+
+#### Bug fixes
+- 🐛 **iOS Chrome nav overlap** — nav bar was covering content at bottom of screen
+- 🐛 **PWA mode nav disappears** — nav would scroll off-screen when added to iPhone home screen; flex layout fixes this permanently
+- 🐛 **Weekly check removed** — removed from nav bar for now; will be redesigned in a future release
+
+---
+
 ### v1.2 — June 2026
 
 #### Features
