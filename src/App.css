@@ -649,6 +649,65 @@ html, body { height: 100%; }
 .weekly-budget-amt    { color: var(--text-muted); }
 .weekly-status { font-size: .75rem; color: var(--text-muted); margin-bottom: 4px; }
 
+/* ── Transaction filter ─────────────────────────────────────── */
+.filter-toggle-btn {
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .2s;
+  white-space: nowrap;
+}
+.filter-toggle-btn.open   { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+.filter-toggle-btn.active { border-color: var(--accent); color: #fff; background: var(--accent); }
+.filter-count {
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+.filter-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .3s ease, padding .3s ease, opacity .3s ease;
+  opacity: 0;
+}
+.filter-panel.open {
+  max-height: 500px;
+  opacity: 1;
+  padding: 14px 0 8px;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+}
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.filter-field { display: flex; flex-direction: column; gap: 4px; }
+.filter-field.full-width { grid-column: 1 / -1; }
+.filter-field .form-label { font-size: .72rem; }
+.filter-field .form-input { padding: 8px 12px; font-size: .88rem; }
+.filter-clear-btn {
+  margin-top: 10px;
+  padding: 7px 16px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: background .15s;
+}
+.filter-clear-btn:hover { background: var(--border); }
+
 /* ── Edit + refund styles ───────────────────────────────────── */
 .expense-actions {
   display: flex;
