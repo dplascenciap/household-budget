@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { subscribeToExpenses } from '../firebase/db'
+import { subscribeToExpenses, deleteExpense } from '../firebase/db'
 import { MONTHLY_BUDGET, CATEGORY_COLORS } from '../data/budgets'
+import ConfirmDialog from './ConfirmDialog'
+import ExpenseForm from './ExpenseForm'
 
 const MONTHS = ['January','February','March','April','May','June',
                  'July','August','September','October','November','December']
@@ -62,9 +64,16 @@ export default function CategoryDetail() {
   const color      = CATEGORY_COLORS[category] || '#94a3b8'
   const budget     = MONTHLY_BUDGET[category] || 0
 
-  const [month, setMonth]       = useState(currentMonth)
-  const [expenses, setExpenses] = useState([])
-  const [loading, setLoading]   = useState(true)
+  const [month, setMonth]         = useState(currentMonth)
+  const [expenses, setExpenses]   = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [pendingDelete, setPendingDelete] = useState(null)
+  const [editExpense, setEditExpense]     = useState(null)
+
+  async function confirmDelete() {
+    await deleteExpense(pendingDelete)
+    setPendingDelete(null)
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -168,21 +177,49 @@ export default function CategoryDetail() {
           <div className="card">
             <div className="card-title" style={{marginBottom:12}}>All Transactions</div>
             <div className="expense-items">
-              {expenses.map(e => (
-                <div key={e.id} className="expense-row">
-                  <div className="expense-cat-badge" style={{background:color}}>
-                    {String(e.date.split('-')[2]).padStart(2,'0')}
+              {expenses.map(e => {
+                const isRefund = e.amount < 0
+                return (
+                  <div key={e.id} className={`expense-row${isRefund ? ' refund-row' : ''}`}>
+                    <div className="expense-cat-badge" style={{background:color}}>
+                      {String(e.date.split('-')[2]).padStart(2,'0')}
+                    </div>
+                    <div className="expense-info">
+                      <div className="expense-desc">
+                        {e.description || category}
+                        {isRefund && <span className="refund-badge">↩ Refund</span>}
+                      </div>
+                      <div className="expense-meta">{fmtDate(e.date)} · {e.addedBy?.split('@')[0]}</div>
+                    </div>
+                    <div className={`expense-amount${isRefund ? ' refund-amount' : ''}`}>
+                      {fmt(e.amount)}
+                    </div>
+                    <div className="expense-actions">
+                      <button className="btn-edit" onClick={() => setEditExpense(e)} title="Edit">✏️</button>
+                      <button className="btn-delete" onClick={() => setPendingDelete(e.id)} title="Delete">✕</button>
+                    </div>
                   </div>
-                  <div className="expense-info">
-                    <div className="expense-desc">{e.description || category}</div>
-                    <div className="expense-meta">{fmtDate(e.date)} · {e.addedBy?.split('@')[0]}</div>
-                  </div>
-                  <div className="expense-amount">{fmt(e.amount)}</div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </>
+      )}
+
+      {pendingDelete && (
+        <ConfirmDialog
+          message="Delete this expense?"
+          onConfirm={confirmDelete}
+          onCancel={() => setPendingDelete(null)}
+        />
+      )}
+
+      {editExpense && (
+        <ExpenseForm
+          user={{ email: editExpense.addedBy }}
+          expense={editExpense}
+          onClose={() => setEditExpense(null)}
+        />
       )}
     </div>
   )
