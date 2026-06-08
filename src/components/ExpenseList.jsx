@@ -80,76 +80,7 @@ export default function ExpenseList({ expenses, user }) {
           </div>
         </div>
 
-        {/* Filter panel */}
-        <div className={`filter-panel${showFilter ? ' open' : ''}`}>
-          <div className="filter-grid">
-            {/* Description search — full width */}
-            <div className="filter-field full-width">
-              <label className="form-label">Search description</label>
-              <input
-                className="form-input"
-                type="text"
-                placeholder="e.g. Chipotle, Amazon…"
-                value={filters.search}
-                onChange={e => updateFilter('search', e.target.value)}
-              />
-            </div>
-
-            {/* Amount range */}
-            <div className="filter-field">
-              <label className="form-label">Min amount ($)</label>
-              <input
-                className="form-input"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                value={filters.minAmount}
-                onChange={e => updateFilter('minAmount', e.target.value)}
-              />
-            </div>
-            <div className="filter-field">
-              <label className="form-label">Max amount ($)</label>
-              <input
-                className="form-input"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="Any"
-                value={filters.maxAmount}
-                onChange={e => updateFilter('maxAmount', e.target.value)}
-              />
-            </div>
-
-            {/* Date range */}
-            <div className="filter-field">
-              <label className="form-label">From date</label>
-              <input
-                className="form-input"
-                type="date"
-                value={filters.dateFrom}
-                onChange={e => updateFilter('dateFrom', e.target.value)}
-              />
-            </div>
-            <div className="filter-field">
-              <label className="form-label">To date</label>
-              <input
-                className="form-input"
-                type="date"
-                value={filters.dateTo}
-                onChange={e => updateFilter('dateTo', e.target.value)}
-              />
-            </div>
-          </div>
-
-          {active && (
-            <button className="filter-clear-btn" onClick={clearFilters}>
-              ✕ Clear filters
-            </button>
-          )}
-        </div>
-
-        {/* Transactions */}
+        {/* Transactions — above the filter so results stay visible when keyboard opens */}
         {expenses.length === 0 ? (
           <div className="empty-state">No transactions yet this month. Hit + to add one.</div>
         ) : filtered.length === 0 ? (
@@ -187,6 +118,69 @@ export default function ExpenseList({ expenses, user }) {
             })}
           </div>
         )}
+
+        {/* Filter panel — below results so keyboard covers inputs, not results */}
+        <div className={`filter-panel${showFilter ? ' open' : ''}`}>
+          <div className="filter-grid">
+            <div className="filter-field full-width">
+              <label className="form-label">Search description</label>
+              <input
+                className="form-input"
+                type="text"
+                placeholder="e.g. Chipotle, Amazon…"
+                value={filters.search}
+                onChange={e => updateFilter('search', e.target.value)}
+              />
+            </div>
+            <div className="filter-field">
+              <label className="form-label">Min amount ($)</label>
+              <input
+                className="form-input"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value={filters.minAmount}
+                onChange={e => updateFilter('minAmount', e.target.value)}
+              />
+            </div>
+            <div className="filter-field">
+              <label className="form-label">Max amount ($)</label>
+              <input
+                className="form-input"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Any"
+                value={filters.maxAmount}
+                onChange={e => updateFilter('maxAmount', e.target.value)}
+              />
+            </div>
+            <div className="filter-field">
+              <label className="form-label">From date</label>
+              <input
+                className="form-input"
+                type="date"
+                value={filters.dateFrom}
+                onChange={e => updateFilter('dateFrom', e.target.value)}
+              />
+            </div>
+            <div className="filter-field">
+              <label className="form-label">To date</label>
+              <input
+                className="form-input"
+                type="date"
+                value={filters.dateTo}
+                onChange={e => updateFilter('dateTo', e.target.value)}
+              />
+            </div>
+          </div>
+          {active && (
+            <button className="filter-clear-btn" onClick={clearFilters}>
+              ✕ Clear filters
+            </button>
+          )}
+        </div>
       </div>
 
       {pendingDelete && (
