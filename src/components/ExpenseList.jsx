@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { deleteExpense } from '../firebase/db'
 import { CATEGORY_COLORS } from '../data/budgets'
 import ConfirmDialog from './ConfirmDialog'
@@ -40,7 +40,6 @@ export default function ExpenseList({ expenses, user }) {
   const [editExpense, setEditExpense]     = useState(null)
   const [showFilter, setShowFilter]       = useState(false)
   const [filters, setFilters]             = useState(EMPTY_FILTERS)
-  const filterRef                         = useRef(null)
 
   async function confirmDelete() {
     await deleteExpense(pendingDelete)
@@ -53,25 +52,6 @@ export default function ExpenseList({ expenses, user }) {
 
   function clearFilters() {
     setFilters(EMPTY_FILTERS)
-  }
-
-  function toggleFilter() {
-    const next = !showFilter
-    setShowFilter(next)
-    if (next) {
-      // Scroll filter panel to top of viewport after it opens
-      // so results below have maximum space above the keyboard
-      setTimeout(() => {
-        filterRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }, 50)
-    }
-  }
-
-  // When a filter input is focused, re-scroll to keep filter at top
-  function onInputFocus() {
-    setTimeout(() => {
-      filterRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 300) // wait for keyboard animation
   }
 
   const active   = hasActiveFilters(filters)
@@ -92,7 +72,7 @@ export default function ExpenseList({ expenses, user }) {
             )}
             <button
               className={`filter-toggle-btn${showFilter ? ' open' : ''}${active ? ' active' : ''}`}
-              onClick={toggleFilter}
+              onClick={() => setShowFilter(s => !s)}
               title="Filter transactions"
             >
               🔍 {active ? 'Filtered' : 'Filter'}
@@ -100,10 +80,8 @@ export default function ExpenseList({ expenses, user }) {
           </div>
         </div>
 
-        {/* Filter panel — at top so it's always immediately visible.
-            Auto-scrolls to top of viewport on open so results maximise
-            the space above the keyboard when typing.                    */}
-        <div className={`filter-panel${showFilter ? ' open' : ''}`} ref={filterRef}>
+        {/* Filter panel */}
+        <div className={`filter-panel${showFilter ? ' open' : ''}`}>
           <div className="filter-grid">
             <div className="filter-field full-width">
               <label className="form-label">Search description</label>
@@ -113,7 +91,6 @@ export default function ExpenseList({ expenses, user }) {
                 placeholder="e.g. Chipotle, Amazon…"
                 value={filters.search}
                 onChange={e => updateFilter('search', e.target.value)}
-                onFocus={onInputFocus}
               />
             </div>
             <div className="filter-field">
@@ -126,7 +103,6 @@ export default function ExpenseList({ expenses, user }) {
                 placeholder="0.00"
                 value={filters.minAmount}
                 onChange={e => updateFilter('minAmount', e.target.value)}
-                onFocus={onInputFocus}
               />
             </div>
             <div className="filter-field">
@@ -139,7 +115,6 @@ export default function ExpenseList({ expenses, user }) {
                 placeholder="Any"
                 value={filters.maxAmount}
                 onChange={e => updateFilter('maxAmount', e.target.value)}
-                onFocus={onInputFocus}
               />
             </div>
             <div className="filter-field">
@@ -149,7 +124,6 @@ export default function ExpenseList({ expenses, user }) {
                 type="date"
                 value={filters.dateFrom}
                 onChange={e => updateFilter('dateFrom', e.target.value)}
-                onFocus={onInputFocus}
               />
             </div>
             <div className="filter-field">
@@ -159,7 +133,6 @@ export default function ExpenseList({ expenses, user }) {
                 type="date"
                 value={filters.dateTo}
                 onChange={e => updateFilter('dateTo', e.target.value)}
-                onFocus={onInputFocus}
               />
             </div>
           </div>
