@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const NAV_ITEMS = [
-  { path: '/',       icon: '🏠', label: 'Dashboard' },
-  { path: '/weekly', icon: '📅', label: 'Weekly'    },
+  { path: '/', icon: '🏠', label: 'Dashboard' },
+  // Weekly removed in v1.3 — will be redesigned in a future release
 ]
 
 export default function BottomNav() {
