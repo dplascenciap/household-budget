@@ -689,6 +689,39 @@ body {
 .filter-field.full-width { grid-column: 1 / -1; }
 .filter-field .form-label { font-size: .72rem; }
 .filter-field .form-input { padding: 8px 12px; font-size: .88rem; }
+/* ── Export button ──────────────────────────────────────────── */
+.export-btn {
+  padding: 5px 12px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .2s;
+  white-space: nowrap;
+}
+.export-btn:hover { background: var(--border); color: var(--text); }
+.export-filter-note {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: .8rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.export-note {
+  font-size: .8rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* Tighten chart legend value to fit $ + % */
+.chart-legend-value { font-size: .68rem; }
+
 /* Category filter pills */
 .filter-cat-pills {
   display: flex;

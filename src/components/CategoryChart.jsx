@@ -14,7 +14,7 @@ const CustomTooltip = ({ active, payload }) => {
 }
 
 export default function CategoryChart({ expenses }) {
-  const data = Object.entries(
+  const raw = Object.entries(
     expenses.reduce((acc, e) => {
       acc[e.category] = (acc[e.category] || 0) + e.amount
       return acc
@@ -22,6 +22,12 @@ export default function CategoryChart({ expenses }) {
   )
     .map(([name, value]) => ({ name, value: Math.round(value * 100) / 100, color: CATEGORY_COLORS[name] || '#94a3b8' }))
     .sort((a, b) => b.value - a.value)
+
+  const total = raw.reduce((s, d) => s + d.value, 0)
+  const data  = raw.map(d => ({
+    ...d,
+    pct: total > 0 ? ((d.value / total) * 100).toFixed(1) : '0.0',
+  }))
 
   if (!data.length) {
     return (
@@ -64,7 +70,7 @@ export default function CategoryChart({ expenses }) {
           <div key={item.name} className="chart-legend-item">
             <span className="chart-legend-dot" style={{ background: item.color }} />
             <span className="chart-legend-name">{item.name}</span>
-            <span className="chart-legend-value">{fmt(item.value)}</span>
+            <span className="chart-legend-value">{fmt(item.value)} · {item.pct}%</span>
           </div>
         ))}
       </div>

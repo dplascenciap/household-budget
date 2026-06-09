@@ -9,6 +9,8 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 ### v1.4 — July 2026
 
 #### Features
+- **CSV export** — ↓ CSV button in the Recent Transactions header; select a month range, respects active filters, includes a category summary at the bottom; useful for pasting to Claude for financial review
+- **Donut chart percentages** — legend now shows both dollar amount and percentage (`$516 · 8.5%`) for each category
 - **Multi-category filter** — tap category pills in the filter panel to select one or more categories; only categories with expenses in the current month are shown; pills highlight in their category colour when selected
 - **Tab labels simplified** — removed emojis from "By Category" and "Daily Trend" chart tabs to prevent cropping on narrow screens (iPhone 14 Pro)
 

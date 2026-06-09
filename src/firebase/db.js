@@ -1,6 +1,6 @@
 import {
   collection, addDoc, deleteDoc, doc, updateDoc,
-  onSnapshot, query, where, serverTimestamp,
+  onSnapshot, query, where, serverTimestamp, getDocs,
 } from 'firebase/firestore'
 import { db, HOUSEHOLD_ID } from './config'
 
@@ -60,4 +60,14 @@ export async function updateExpense(id, { amount, category, description, date })
 // Delete an expense by id
 export async function deleteExpense(id) {
   return deleteDoc(doc(db, 'households', HOUSEHOLD_ID, 'expenses', id))
+}
+
+// One-shot fetch for multiple months — used by CSV export
+export async function fetchExpensesForMonths(months) {
+  const snaps = await Promise.all(
+    months.map(month => getDocs(query(expensesRef(), where('month', '==', month))))
+  )
+  return snaps
+    .flatMap(snap => snap.docs.map(d => ({ id: d.id, ...d.data() })))
+    .sort((a, b) => (b.date > a.date ? 1 : -1))
 }

@@ -3,6 +3,7 @@ import { deleteExpense } from '../firebase/db'
 import { CATEGORY_COLORS } from '../data/budgets'
 import ConfirmDialog from './ConfirmDialog'
 import ExpenseForm from './ExpenseForm'
+import ExportModal from './ExportModal'
 
 function fmt(n) {
   const abs = Math.abs(n).toLocaleString('en-CA', { minimumFractionDigits: 2 })
@@ -40,6 +41,7 @@ export default function ExpenseList({ expenses, user }) {
   const [pendingDelete, setPendingDelete] = useState(null)
   const [editExpense, setEditExpense]     = useState(null)
   const [showFilter, setShowFilter]         = useState(false)
+  const [showExport, setShowExport]         = useState(false)
   const [filters, setFilters]               = useState(EMPTY_FILTERS)
   const [selectedCats, setSelectedCats]     = useState([])
 
@@ -90,6 +92,13 @@ export default function ExpenseList({ expenses, user }) {
               title="Filter transactions"
             >
               🔍 {active ? 'Filtered' : 'Filter'}
+            </button>
+            <button
+              className="export-btn"
+              onClick={() => setShowExport(true)}
+              title="Export to CSV"
+            >
+              ↓ CSV
             </button>
           </div>
         </div>
@@ -229,6 +238,14 @@ export default function ExpenseList({ expenses, user }) {
           user={user}
           expense={editExpense}
           onClose={() => setEditExpense(null)}
+        />
+      )}
+
+      {showExport && (
+        <ExportModal
+          filters={filters}
+          selectedCats={selectedCats}
+          onClose={() => setShowExport(false)}
         />
       )}
     </>
