@@ -1,22 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { addExpense, updateExpense } from '../firebase/db'
 import { CATEGORIES } from '../data/budgets'
 
 function today() { return new Date().toISOString().slice(0, 10) }
-
-function useKeyboardOffset(ref) {
-  useEffect(() => {
-    const vv = window.visualViewport
-    if (!vv || !ref.current) return
-    function onResize() {
-      const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop)
-      if (ref.current) ref.current.style.setProperty('--keyboard-offset', `${offset}px`)
-    }
-    vv.addEventListener('resize', onResize)
-    vv.addEventListener('scroll', onResize)
-    return () => { vv.removeEventListener('resize', onResize); vv.removeEventListener('scroll', onResize) }
-  }, [ref])
-}
 
 // expense = null → add mode; expense = object → edit mode
 export default function ExpenseForm({ user, onClose, expense }) {
@@ -32,9 +18,6 @@ export default function ExpenseForm({ user, onClose, expense }) {
   })
   const [saving, setSaving] = useState(false)
   const [error, setError]   = useState('')
-  const modalRef            = useRef(null)
-
-  useKeyboardOffset(modalRef)
 
   function update(field, value) { setForm(f => ({ ...f, [field]: value })) }
 
@@ -65,7 +48,7 @@ export default function ExpenseForm({ user, onClose, expense }) {
 
   return (
     <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="modal modal-keyboard-aware" ref={modalRef}>
+      <div className="modal modal-keyboard-aware">
         <h2 className="modal-title">{title}</h2>
 
         {/* Expense / Refund segmented toggle */}

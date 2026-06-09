@@ -26,14 +26,8 @@ body {
   min-height: 100dvh;
 }
 
-/* ── Layout — flex column fills viewport, nav always visible ── */
-html, body { height: 100%; }
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  overflow: hidden;
-}
+/* ── Layout ────────────────────────────────────────────────── */
+.app-shell { display: flex; flex-direction: column; min-height: 100dvh; }
 
 /* ── Header ────────────────────────────────────────────────── */
 .header {
@@ -41,11 +35,11 @@ html, body { height: 100%; }
   color: #fff;
   padding: 0 24px;
   height: 60px;
-  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-shrink: 0;          /* never shrink in flex layout */
+  position: sticky;
+  top: 0;
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0,0,0,.2);
 }
@@ -66,16 +60,7 @@ html, body { height: 100%; }
 .btn-signout:hover { background: rgba(255,255,255,.25); }
 
 /* ── Main content ──────────────────────────────────────────── */
-.main {
-  flex: 1 1 0;
-  min-height: 0;           /* required for flex child to scroll */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 24px 16px 16px;
-  max-width: 960px;
-  margin: 0 auto;
-  width: 100%;
-}
+.main { flex: 1; padding: 24px 16px; max-width: 960px; margin: 0 auto; width: 100%; }
 
 /* ── Cards ─────────────────────────────────────────────────── */
 .card {
@@ -266,7 +251,7 @@ html, body { height: 100%; }
   align-items: flex-end;
   justify-content: center;
   z-index: 300;
-  /* Push modal above bottom nav + safe area on mobile */
+  /* Lift modal above fixed nav + iPhone home indicator */
   padding-bottom: calc(60px + env(safe-area-inset-bottom));
 }
 @media (min-width: 640px) {
@@ -284,17 +269,13 @@ html, body { height: 100%; }
   .modal { border-radius: var(--radius); box-shadow: var(--shadow); }
 }
 
-/* Keyboard-aware modal — dvh shrinks when keyboard opens (Android + iOS 15.4+)
-   visualViewport hook handles older iOS as fallback                            */
+/* Keyboard-aware modal: dvh shrinks when keyboard opens on modern iOS + Android.
+   No transform needed — padding-bottom on overlay already lifts modal above nav. */
 .modal-keyboard-aware {
-  --keyboard-offset: 0px;
-  max-height: calc(90dvh - var(--keyboard-offset));
+  max-height: 85dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* Shift up by keyboard offset for iOS where dvh may not update */
-  transform: translateY(calc(-1 * var(--keyboard-offset)));
-  transition: transform 0.2s ease, max-height 0.2s ease;
 }
 .modal-scroll-body {
   flex: 1;
@@ -495,16 +476,18 @@ html, body { height: 100%; }
 
 /* ── Bottom navigation ──────────────────────────────────────── */
 .bottom-nav {
-  flex-shrink: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: var(--card);
   border-top: 1px solid var(--border);
   display: flex;
   align-items: stretch;
   z-index: 150;
   box-shadow: 0 -2px 8px rgba(0,0,0,.06);
-  /* safe area for iPhone home indicator */
   padding-bottom: env(safe-area-inset-bottom);
-  min-height: calc(60px + env(safe-area-inset-bottom));
+  height: calc(60px + env(safe-area-inset-bottom));
 }
 .bottom-nav-item {
   flex: 1;
@@ -531,8 +514,14 @@ html, body { height: 100%; }
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
+  overflow: hidden;
 }
-.chart-panel-header .chart-tabs { flex: 1; margin-bottom: 0; }
+.chart-panel-header .chart-tabs {
+  flex: 1;
+  min-width: 0;   /* allows flex child to shrink below content size */
+  margin-bottom: 0;
+  overflow: hidden;
+}
 
 /* Rent toggle — compact icon-only version lives in chart header */
 .rent-toggle-btn {
@@ -823,10 +812,12 @@ html, body { height: 100%; }
 @media (max-width: 640px) {
   .summary-grid       { grid-template-columns: 1fr 1fr; }
   .grid-2             { grid-template-columns: 1fr; }
-  .main               { padding: 16px 12px 16px; }
+  /* Bottom padding clears fixed nav + safe area + breathing room */
+  .main               { padding: 16px 12px calc(60px + env(safe-area-inset-bottom) + 16px); }
   .header             { padding: 0 16px; }
   .header-user        { display: none; }
   .detail-summary-row { grid-template-columns: repeat(3,1fr); }
+  .chart-tab          { padding: 8px 8px; font-size: .76rem; }
 }
 @media (max-width: 380px) {
   .summary-grid { grid-template-columns: 1fr 1fr; }
