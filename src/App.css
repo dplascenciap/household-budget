@@ -217,6 +217,11 @@ body {
 }
 .expense-row:hover .btn-delete { opacity: 1; }
 .btn-delete:hover { color: var(--danger); }
+/* On touch devices, always show action buttons — hover doesn't exist on iOS/Android */
+@media (hover: none) {
+  .btn-edit   { opacity: 1; }
+  .btn-delete { opacity: 1; }
+}
 .empty-state { text-align: center; padding: 32px; color: var(--text-muted); font-size: .9rem; }
 
 /* ── Add button (FAB) ──────────────────────────────────────── */
