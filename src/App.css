@@ -237,7 +237,7 @@ html, body { height: 100%; }
 /* ── Add button (FAB) ──────────────────────────────────────── */
 .fab {
   position: fixed;
-  bottom: 28px;
+  bottom: calc(60px + 16px + env(safe-area-inset-bottom));
   right: 24px;
   width: 56px;
   height: 56px;
@@ -266,7 +266,8 @@ html, body { height: 100%; }
   align-items: flex-end;
   justify-content: center;
   z-index: 300;
-  padding: 0;
+  /* Push modal above bottom nav + safe area on mobile */
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
 }
 @media (min-width: 640px) {
   .modal-overlay { align-items: center; padding: 24px; }
@@ -694,6 +695,30 @@ html, body { height: 100%; }
 .filter-field.full-width { grid-column: 1 / -1; }
 .filter-field .form-label { font-size: .72rem; }
 .filter-field .form-input { padding: 8px 12px; font-size: .88rem; }
+/* Category filter pills */
+.filter-cat-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.filter-cat-pill {
+  padding: 4px 10px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.filter-cat-pill.active {
+  color: #fff;
+  border-color: transparent;
+}
+
 .filter-clear-btn {
   margin-top: 10px;
   padding: 7px 16px;

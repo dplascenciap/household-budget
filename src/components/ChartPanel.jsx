@@ -3,8 +3,8 @@ import CategoryChart from './CategoryChart'
 import DailySpendChart from './DailySpendChart'
 
 const TABS = [
-  { id: 'category', label: '🍩 By Category' },
-  { id: 'daily',    label: '📈 Daily Trend'  },
+  { id: 'category', label: 'By Category' },
+  { id: 'daily',    label: 'Daily Trend'  },
 ]
 
 export default function ChartPanel({ expenses, month, totalBudget, hideRent, onToggleHideRent }) {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { deleteExpense } from '../firebase/db'
 import { CATEGORY_COLORS } from '../data/budgets'
 import ConfirmDialog from './ConfirmDialog'
@@ -18,11 +18,11 @@ function initials(cat) { return cat.split(' ').map(w => w[0]).join('').slice(0, 
 
 const EMPTY_FILTERS = { search: '', minAmount: '', maxAmount: '', dateFrom: '', dateTo: '' }
 
-function hasActiveFilters(f) {
-  return Object.values(f).some(v => v !== '')
+function hasActiveFilters(f, cats) {
+  return Object.values(f).some(v => v !== '') || cats.length > 0
 }
 
-function applyFilters(expenses, f) {
+function applyFilters(expenses, f, cats) {
   return expenses.filter(e => {
     const text = `${e.description} ${e.category}`.toLowerCase()
     if (f.search && !text.includes(f.search.toLowerCase())) return false
@@ -31,6 +31,7 @@ function applyFilters(expenses, f) {
     if (f.maxAmount && amt > parseFloat(f.maxAmount)) return false
     if (f.dateFrom && e.date < f.dateFrom) return false
     if (f.dateTo   && e.date > f.dateTo)   return false
+    if (cats.length > 0 && !cats.includes(e.category)) return false
     return true
   })
 }
@@ -38,8 +39,14 @@ function applyFilters(expenses, f) {
 export default function ExpenseList({ expenses, user }) {
   const [pendingDelete, setPendingDelete] = useState(null)
   const [editExpense, setEditExpense]     = useState(null)
-  const [showFilter, setShowFilter]       = useState(false)
-  const [filters, setFilters]             = useState(EMPTY_FILTERS)
+  const [showFilter, setShowFilter]         = useState(false)
+  const [filters, setFilters]               = useState(EMPTY_FILTERS)
+  const [selectedCats, setSelectedCats]     = useState([])
+
+  // Only show categories that have expenses this month
+  const availableCats = useMemo(() =>
+    [...new Set(expenses.map(e => e.category))].sort(),
+  [expenses])
 
   async function confirmDelete() {
     await deleteExpense(pendingDelete)
@@ -50,12 +57,19 @@ export default function ExpenseList({ expenses, user }) {
     setFilters(f => ({ ...f, [field]: value }))
   }
 
-  function clearFilters() {
-    setFilters(EMPTY_FILTERS)
+  function toggleCat(cat) {
+    setSelectedCats(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    )
   }
 
-  const active   = hasActiveFilters(filters)
-  const filtered = applyFilters(expenses, filters)
+  function clearFilters() {
+    setFilters(EMPTY_FILTERS)
+    setSelectedCats([])
+  }
+
+  const active   = hasActiveFilters(filters, selectedCats)
+  const filtered = applyFilters(expenses, filters, selectedCats)
 
   return (
     <>
@@ -82,6 +96,25 @@ export default function ExpenseList({ expenses, user }) {
 
         {/* Filter panel */}
         <div className={`filter-panel${showFilter ? ' open' : ''}`}>
+          {/* Category pills */}
+          {availableCats.length > 0 && (
+            <div className="filter-field full-width" style={{marginBottom:12}}>
+              <label className="form-label">Category</label>
+              <div className="filter-cat-pills">
+                {availableCats.map(cat => (
+                  <button
+                    key={cat}
+                    className={`filter-cat-pill${selectedCats.includes(cat) ? ' active' : ''}`}
+                    style={selectedCats.includes(cat) ? { background: CATEGORY_COLORS[cat] || '#94a3b8', borderColor: CATEGORY_COLORS[cat] || '#94a3b8' } : {}}
+                    onClick={() => toggleCat(cat)}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="filter-grid">
             <div className="filter-field full-width">
               <label className="form-label">Search description</label>

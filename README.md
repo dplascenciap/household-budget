@@ -6,6 +6,19 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 
 ## Changelog
 
+### v1.4 — July 2026
+
+#### Features
+- **Multi-category filter** — tap category pills in the filter panel to select one or more categories; only categories with expenses in the current month are shown; pills highlight in their category colour when selected
+- **Tab labels simplified** — removed emojis from "By Category" and "Daily Trend" chart tabs to prevent cropping on narrow screens (iPhone 14 Pro)
+
+#### Bug fixes
+- 🐛 **Modal buttons hidden by nav bar (iPhone)** — Cancel and Save buttons were behind the bottom nav; modal overlay now lifts above the nav bar on mobile
+- 🐛 **FAB hidden by nav bar (iPhone)** — the + button was overlapping the nav bar; repositioned to always clear it including safe area
+- 🐛 **Rent toggle cropped (iPhone 14 Pro)** — tab label emojis were causing overflow on narrow screens; removed to ensure the 🏠 toggle is always fully visible
+
+---
+
 ### v1.3 — June 2026
 
 #### Features
