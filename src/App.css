@@ -207,16 +207,18 @@ body {
 .btn-delete {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--danger);
   cursor: pointer;
   font-size: 1rem;
   opacity: 0;
   padding: 4px;
   border-radius: 4px;
-  transition: opacity .15s, color .15s;
+  transition: opacity .15s;
+  display: flex;
+  align-items: center;
 }
 .expense-row:hover .btn-delete { opacity: 1; }
-.btn-delete:hover { color: var(--danger); }
+.btn-delete:hover { opacity: 1; }
 /* On touch devices, always show action buttons — hover doesn't exist on iOS/Android */
 @media (hover: none) {
   .btn-edit   { opacity: 1; }
@@ -719,6 +721,34 @@ body {
   line-height: 1.5;
 }
 
+/* Chart card header — title + legend mode toggle side by side */
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.legend-mode-toggle { display: flex; gap: 2px; }
+.legend-mode-btn {
+  padding: 2px 7px;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .15s;
+  line-height: 1.6;
+}
+.legend-mode-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.legend-mode-btn:hover:not(.active) { background: var(--border); }
+
 /* Tighten chart legend value to fit $ + % */
 .chart-legend-value { font-size: .68rem; }
 
@@ -776,6 +806,8 @@ body {
   border-radius: 4px;
   opacity: .55;
   transition: opacity .15s;
+  display: flex;
+  align-items: center;
 }
 .btn-edit:hover { opacity: 1; }
 .refund-row { background: #f0fdf4; border-radius: var(--radius-sm); }

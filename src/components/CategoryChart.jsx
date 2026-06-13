@@ -1,7 +1,32 @@
+import { useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { CATEGORY_COLORS } from '../data/budgets'
 
 function fmt(v) { return `$${v.toLocaleString('en-CA', { minimumFractionDigits: 0 })}` }
+
+// Persist legend display preference across sessions
+function useLegendMode() {
+  const [mode, setModeState] = useState(
+    () => localStorage.getItem('chartLegendMode') || 'both'
+  )
+  function setMode(m) {
+    setModeState(m)
+    localStorage.setItem('chartLegendMode', m)
+  }
+  return [mode, setMode]
+}
+
+const MODES = [
+  { id: 'dollar', label: '$'   },
+  { id: 'pct',    label: '%'   },
+  { id: 'both',   label: '$+%' },
+]
+
+function legendValue(item, mode) {
+  if (mode === 'dollar') return fmt(item.value)
+  if (mode === 'pct')    return `${item.pct}%`
+  return `${fmt(item.value)} · ${item.pct}%`
+}
 
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
@@ -14,6 +39,8 @@ const CustomTooltip = ({ active, payload }) => {
 }
 
 export default function CategoryChart({ expenses }) {
+  const [mode, setMode] = useLegendMode()
+
   const raw = Object.entries(
     expenses.reduce((acc, e) => {
       acc[e.category] = (acc[e.category] || 0) + e.amount
@@ -40,9 +67,24 @@ export default function CategoryChart({ expenses }) {
 
   return (
     <div className="card chart-card">
-      <div className="card-title">Spending by Category</div>
+      {/* Title + legend mode toggle */}
+      <div className="chart-card-header">
+        <div className="card-title" style={{ marginBottom: 0 }}>Spending by Category</div>
+        <div className="legend-mode-toggle">
+          {MODES.map(m => (
+            <button
+              key={m.id}
+              className={`legend-mode-btn${mode === m.id ? ' active' : ''}`}
+              onClick={() => setMode(m.id)}
+              title={m.id === 'dollar' ? 'Show amounts' : m.id === 'pct' ? 'Show percentages' : 'Show both'}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      {/* Donut — legend removed from inside, no more cropping */}
+      {/* Donut */}
       <div className="chart-wrap">
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
@@ -64,13 +106,13 @@ export default function CategoryChart({ expenses }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Custom 2-column legend below the chart */}
+      {/* Legend */}
       <div className="chart-legend">
         {data.map(item => (
           <div key={item.name} className="chart-legend-item">
             <span className="chart-legend-dot" style={{ background: item.color }} />
             <span className="chart-legend-name">{item.name}</span>
-            <span className="chart-legend-value">{fmt(item.value)} · {item.pct}%</span>
+            <span className="chart-legend-value">{legendValue(item, mode)}</span>
           </div>
         ))}
       </div>
