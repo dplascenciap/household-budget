@@ -31,9 +31,10 @@ function legendValue(item, mode) {
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
   const { name, value } = payload[0]
+  const pct = payload[0].payload?.pct
   return (
     <div style={{ background:'#fff', border:'1px solid #e2e8f0', borderRadius:8, padding:'8px 12px', fontSize:'.85rem', boxShadow:'0 2px 8px rgba(0,0,0,.1)' }}>
-      <strong>{name}</strong><br />{fmt(value)}
+      <strong>{name}</strong><br />{fmt(value)}{pct ? ` · ${pct}%` : ''}
     </div>
   )
 }
