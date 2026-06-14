@@ -56,7 +56,7 @@ const CustomTooltip = ({ active, payload }) => {
 function buildChartData(expenses, color) {
   const groups = {}
   expenses.forEach(e => {
-    const key = e.description?.trim() || '(no description)'
+    const key = e.storeName?.trim() || e.description?.trim() || '(no store name)'
     groups[key] = (groups[key] || 0) + e.amount
   })
   const entries = Object.entries(groups)
