@@ -194,7 +194,7 @@ export default function CategoryDetail({ user }) {
               <div className="chart-wrap">
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
-                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value">
+                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value" isAnimationActive={false}>
                       {chartData.map((_, i) => <Cell key={i} fill={PALETTE[i % PALETTE.length]} />)}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />
@@ -232,7 +232,15 @@ export default function CategoryDetail({ user }) {
                     <div className="expense-info">
                       <div className="expense-desc">
                         {e.storeName || e.description || category}
-                        {isRefund && <span className="refund-badge">↩ Refund</span>}
+                        {isRefund && (
+                          <span className="refund-badge">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:3,verticalAlign:'middle'}}>
+                              <path d="M9 14L4 9l5-5"/>
+                              <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>
+                            </svg>
+                            Refund
+                          </span>
+                        )}
                       </div>
                       <div className="expense-meta">
                         {fmtDate(e.date)} · {e.addedBy?.split('@')[0]}

@@ -939,8 +939,8 @@ body {
 @media (max-width: 640px) {
   .summary-grid       { grid-template-columns: 1fr 1fr; }
   .grid-2             { grid-template-columns: 1fr; }
-  /* Bottom padding clears fixed nav + safe area + breathing room */
-  .main               { padding: 16px 12px calc(60px + env(safe-area-inset-bottom) + 16px); }
+  /* Bottom padding clears fixed nav + safe area + FAB (56px) + breathing room */
+  .main               { padding: 16px 12px calc(60px + env(safe-area-inset-bottom) + 80px); }
   .header             { padding: 0 16px; }
   .header-user        { display: none; }
   .detail-summary-row { grid-template-columns: repeat(3,1fr); }

@@ -210,7 +210,15 @@ export default function ExpenseList({ expenses, user }) {
                   <div className="expense-info">
                     <div className="expense-desc">
                       {e.storeName || e.description || e.category}
-                      {isRefund && <span className="refund-badge">↩ Refund</span>}
+                      {isRefund && (
+                        <span className="refund-badge">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:3,verticalAlign:'middle'}}>
+                            <path d="M9 14L4 9l5-5"/>
+                            <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>
+                          </svg>
+                          Refund
+                        </span>
+                      )}
                     </div>
                     <div className="expense-meta">
                       {fmtDate(e.date)} · {e.category} · {e.addedBy?.split('@')[0]}

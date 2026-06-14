@@ -21,6 +21,9 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 
 #### Bug fixes
 - 🐛 **Category donut showed "(no description)"** — now reads `storeName` field after v1.6 migration
+- 🐛 **FAB overlaps last transaction** — increased bottom padding on main content to clear the + button
+- 🐛 **Category donut requires double-tap on iOS** — added `isAnimationActive={false}` to Pie; first tap now shows tooltip immediately
+- 🐛 **Refund badge used Unicode arrow** — replaced `↩` with SVG return arrow icon
 
 ---
 
