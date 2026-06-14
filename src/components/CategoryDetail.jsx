@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { subscribeToExpenses, deleteExpense } from '../firebase/db'
 import { MONTHLY_BUDGET, CATEGORY_COLORS } from '../data/budgets'
 import ConfirmDialog from './ConfirmDialog'
@@ -43,16 +43,6 @@ function monthLabel(month) {
   return `${MONTHS[m-1]} ${y}`
 }
 
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null
-  const { name, value } = payload[0]
-  const pct = payload[0].payload?.pct
-  return (
-    <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:8,padding:'8px 12px',fontSize:'.83rem',boxShadow:'0 2px 8px rgba(0,0,0,.1)'}}>
-      <strong>{name}</strong><br/>{fmt(value)}{pct ? ` · ${pct}%` : ''}
-    </div>
-  )
-}
 
 // Build donut data: group by description (merchant)
 function buildChartData(expenses, color) {
@@ -94,6 +84,7 @@ export default function CategoryDetail({ user }) {
   const [editExpense, setEditExpense]     = useState(null)
   const [showAddForm, setShowAddForm]     = useState(false)
   const [mode, setMode]                   = useLegendMode()
+  const [activeIdx, setActiveIdx]         = useState(null)
 
   async function confirmDelete() {
     await deleteExpense(pendingDelete)
@@ -194,20 +185,48 @@ export default function CategoryDetail({ user }) {
               <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
-                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={2} dataKey="value">
-                      {chartData.map((_, i) => <Cell key={i} fill={PALETTE[i % PALETTE.length]} />)}
+                    <Pie
+                      data={chartData}
+                      cx="50%" cy="50%"
+                      innerRadius={55} outerRadius={85}
+                      paddingAngle={2} dataKey="value"
+                      onClick={(_, index) => setActiveIdx(prev => prev === index ? null : index)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {chartData.map((_, i) => (
+                        <Cell
+                          key={i}
+                          fill={PALETTE[i % PALETTE.length]}
+                          opacity={activeIdx === null || activeIdx === i ? 1 : 0.45}
+                          stroke={activeIdx === i ? '#fff' : 'none'}
+                          strokeWidth={activeIdx === i ? 2 : 0}
+                        />
+                      ))}
                     </Pie>
-                    <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
+
+              {/* Tap label */}
+              <div className="pie-tap-label" style={{ opacity: activeIdx !== null ? 1 : 0 }}>
+                {activeIdx !== null && chartData[activeIdx]
+                  ? <><strong>{chartData[activeIdx].name}</strong> · {fmt(chartData[activeIdx].value)} · {chartData[activeIdx].pct}%</>
+                  : <span style={{ color: 'transparent' }}>–</span>
+                }
+              </div>
+
               {/* Custom legend with mode toggle */}
               <div className="chart-legend">
                 {chartData.map((item, i) => {
                   const total = chartData.reduce((s,d) => s+d.value, 0)
                   const pct = total > 0 ? ((item.value/total)*100).toFixed(1) : '0.0'
                   return (
-                    <div key={item.name} className="chart-legend-item">
+                    <div
+                      key={item.name}
+                      className="chart-legend-item"
+                      style={{ opacity: activeIdx === null || activeIdx === i ? 1 : 0.45, cursor: 'pointer' }}
+                      onClick={() => setActiveIdx(prev => prev === i ? null : i)}
+                    >
                       <span className="chart-legend-dot" style={{background: PALETTE[i % PALETTE.length]}} />
                       <span className="chart-legend-name">{item.name}</span>
                       <span className="chart-legend-value">{legendValue(item.value, pct, mode)}</span>
@@ -234,9 +253,8 @@ export default function CategoryDetail({ user }) {
                         {e.storeName || e.description || category}
                         {isRefund && (
                           <span className="refund-badge">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight:3,verticalAlign:'middle'}}>
-                              <polyline points="9 10 4 15 9 20"/>
-                              <path d="M20 4h-7a4 4 0 0 0-4 4v7"/>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{marginRight:3,verticalAlign:'middle'}}>
+                              <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
                             </svg>
                             Refund
                           </span>

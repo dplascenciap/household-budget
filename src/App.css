@@ -778,6 +778,17 @@ body {
   line-height: 1.5;
 }
 
+/* Pie tap label — shown when a slice is tapped */
+.pie-tap-label {
+  text-align: center;
+  font-size: .82rem;
+  color: var(--text);
+  min-height: 1.4em;
+  margin: 6px 0 4px;
+  transition: opacity .2s;
+}
+.pie-tap-label strong { color: var(--text); }
+
 /* Chart card header — title + legend mode toggle side by side */
 .chart-card-header {
   display: flex;

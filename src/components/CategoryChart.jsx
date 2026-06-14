@@ -1,18 +1,14 @@
 import { useState } from 'react'
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { CATEGORY_COLORS } from '../data/budgets'
 
 function fmt(v) { return `$${v.toLocaleString('en-CA', { minimumFractionDigits: 0 })}` }
 
-// Persist legend display preference across sessions
 function useLegendMode() {
   const [mode, setModeState] = useState(
     () => localStorage.getItem('chartLegendMode') || 'both'
   )
-  function setMode(m) {
-    setModeState(m)
-    localStorage.setItem('chartLegendMode', m)
-  }
+  function setMode(m) { setModeState(m); localStorage.setItem('chartLegendMode', m) }
   return [mode, setMode]
 }
 
@@ -28,19 +24,9 @@ function legendValue(item, mode) {
   return `${fmt(item.value)} · ${item.pct}%`
 }
 
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null
-  const { name, value } = payload[0]
-  const pct = payload[0].payload?.pct
-  return (
-    <div style={{ background:'#fff', border:'1px solid #e2e8f0', borderRadius:8, padding:'8px 12px', fontSize:'.85rem', boxShadow:'0 2px 8px rgba(0,0,0,.1)' }}>
-      <strong>{name}</strong><br />{fmt(value)}{pct ? ` · ${pct}%` : ''}
-    </div>
-  )
-}
-
 export default function CategoryChart({ expenses }) {
-  const [mode, setMode] = useLegendMode()
+  const [mode, setMode]         = useLegendMode()
+  const [activeIdx, setActiveIdx] = useState(null)
 
   const raw = Object.entries(
     expenses.reduce((acc, e) => {
@@ -66,9 +52,14 @@ export default function CategoryChart({ expenses }) {
     )
   }
 
+  const active = activeIdx !== null ? data[activeIdx] : null
+
+  function handleSliceClick(_, index) {
+    setActiveIdx(prev => prev === index ? null : index)
+  }
+
   return (
     <div className="card chart-card">
-      {/* Title + legend mode toggle */}
       <div className="chart-card-header">
         <div className="card-title" style={{ marginBottom: 0 }}>Spending by Category</div>
         <div className="legend-mode-toggle">
@@ -77,7 +68,6 @@ export default function CategoryChart({ expenses }) {
               key={m.id}
               className={`legend-mode-btn${mode === m.id ? ' active' : ''}`}
               onClick={() => setMode(m.id)}
-              title={m.id === 'dollar' ? 'Show amounts' : m.id === 'pct' ? 'Show percentages' : 'Show both'}
             >
               {m.label}
             </button>
@@ -85,7 +75,7 @@ export default function CategoryChart({ expenses }) {
         </div>
       </div>
 
-      {/* Donut */}
+      {/* Donut — onClick replaces hover tooltip for reliable mobile tap */}
       <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
@@ -97,20 +87,40 @@ export default function CategoryChart({ expenses }) {
               outerRadius={85}
               paddingAngle={2}
               dataKey="value"
+              onClick={handleSliceClick}
+              style={{ cursor: 'pointer' }}
             >
               {data.map((entry, i) => (
-                <Cell key={i} fill={entry.color} />
+                <Cell
+                  key={i}
+                  fill={entry.color}
+                  opacity={activeIdx === null || activeIdx === i ? 1 : 0.45}
+                  stroke={activeIdx === i ? '#fff' : 'none'}
+                  strokeWidth={activeIdx === i ? 2 : 0}
+                />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </ResponsiveContainer>
       </div>
 
+      {/* Tap label — shows on slice tap, replaces hover tooltip */}
+      <div className="pie-tap-label" style={{ opacity: active ? 1 : 0 }}>
+        {active
+          ? <><strong>{active.name}</strong> · {fmt(active.value)} · {active.pct}%</>
+          : <span style={{ color: 'transparent' }}>–</span>
+        }
+      </div>
+
       {/* Legend */}
       <div className="chart-legend">
-        {data.map(item => (
-          <div key={item.name} className="chart-legend-item">
+        {data.map((item, i) => (
+          <div
+            key={item.name}
+            className="chart-legend-item"
+            style={{ opacity: activeIdx === null || activeIdx === i ? 1 : 0.45, cursor: 'pointer' }}
+            onClick={() => handleSliceClick(null, i)}
+          >
             <span className="chart-legend-dot" style={{ background: item.color }} />
             <span className="chart-legend-name">{item.name}</span>
             <span className="chart-legend-value">{legendValue(item, mode)}</span>
