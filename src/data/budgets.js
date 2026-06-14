@@ -13,7 +13,6 @@ export const CATEGORIES = [
   'Subscriptions',
   'Fixed Expenses + Utilities',
   'KOHO Savings',
-  'Government & Legal',
   'Emergency / Unexpected',
   'Other',
 ]
@@ -31,9 +30,8 @@ export const MONTHLY_BUDGET = {
   'Subscriptions':                  70,   // Spotify $20 + Prime $11 + Grammarly $17 + CodeScreen $17 + Nintendo avg $11
   'Fixed Expenses + Utilities':    907,   // car loan $604 + RBC $40 + Bell $76 + Fido $72 + utilities $91 + rent insurance $24
   'KOHO Savings':                 1777,
-  'Government & Legal':              0,   // unbudgeted
   'Emergency / Unexpected':          0,   // unbudgeted
-  'Other':                          75,
+  'Other':                           0,   // unbudgeted — replaces Government & Legal
 }
 
 // Total budget — excludes unbudgeted (0) categories
@@ -46,7 +44,6 @@ export const WEEKLY_EXCLUDE = new Set([
   'Rent',
   'Fixed Expenses + Utilities',
   'KOHO Savings',
-  'Government & Legal',
   'Emergency / Unexpected',
   'Groceries',
 ])
@@ -63,7 +60,6 @@ export const CATEGORY_COLORS = {
   'Subscriptions':                '#4f46e5',
   'Fixed Expenses + Utilities':   '#64748b',
   'KOHO Savings':                 '#059669',
-  'Government & Legal':           '#b45309',
   'Emergency / Unexpected':       '#9f1239',
-  'Other':                        '#94a3b8',
+  'Other':                        '#b45309',   // warm amber — stands out for unexpected costs
 }
