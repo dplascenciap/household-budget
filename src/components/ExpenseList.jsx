@@ -25,7 +25,7 @@ function hasActiveFilters(f, cats) {
 
 function applyFilters(expenses, f, cats) {
   return expenses.filter(e => {
-    const text = `${e.description} ${e.category}`.toLowerCase()
+    const text = `${e.storeName || ''} ${e.description || ''} ${e.category}`.toLowerCase()
     if (f.search && !text.includes(f.search.toLowerCase())) return false
     const amt = Math.abs(e.amount)
     if (f.minAmount && amt < parseFloat(f.minAmount)) return false
@@ -209,11 +209,12 @@ export default function ExpenseList({ expenses, user }) {
                   </div>
                   <div className="expense-info">
                     <div className="expense-desc">
-                      {e.description || e.category}
+                      {e.storeName || e.description || e.category}
                       {isRefund && <span className="refund-badge">↩ Refund</span>}
                     </div>
                     <div className="expense-meta">
                       {fmtDate(e.date)} · {e.category} · {e.addedBy?.split('@')[0]}
+                      {e.description ? ` · ${e.description}` : ''}
                     </div>
                   </div>
                   <div className={`expense-amount${isRefund ? ' refund-amount' : ''}`}>

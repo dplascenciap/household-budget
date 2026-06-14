@@ -41,7 +41,7 @@ function applyFilters(expenses, f, cats) {
   const today = new Date().toISOString().slice(0, 10)
   return expenses.filter(e => {
     if (e.date > today) return false                                      // never include future entries
-    const text = `${e.description} ${e.category}`.toLowerCase()
+    const text = `${e.storeName || ''} ${e.description || ''} ${e.category}`.toLowerCase()
     if (f.search && !text.includes(f.search.toLowerCase())) return false
     const amt = Math.abs(e.amount)
     if (f.minAmount && amt < parseFloat(f.minAmount)) return false
@@ -56,9 +56,10 @@ function applyFilters(expenses, f, cats) {
 function downloadCSV(expenses, fromMonth, toMonth) {
   const sorted = [...expenses].sort((a, b) => (a.date < b.date ? 1 : -1))
 
-  const headers = ['Date','Description','Category','Amount ($)','Type','Added By']
+  const headers = ['Date','Store Name','Notes','Category','Amount ($)','Type','Added By']
   const rows = sorted.map(e => [
     e.date,
+    `"${(e.storeName || '').replace(/"/g, '""')}"`,
     `"${(e.description || '').replace(/"/g, '""')}"`,
     `"${e.category}"`,
     Math.abs(e.amount).toFixed(2),

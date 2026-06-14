@@ -6,6 +6,24 @@ import { MONTHLY_BUDGET, CATEGORY_COLORS } from '../data/budgets'
 import ConfirmDialog from './ConfirmDialog'
 import ExpenseForm from './ExpenseForm'
 
+// Shared legend mode with CategoryChart via localStorage
+const MODES = [
+  { id: 'dollar', label: '$'   },
+  { id: 'pct',    label: '%'   },
+  { id: 'both',   label: '$+%' },
+]
+function useLegendMode() {
+  const [mode, setModeState] = useState(() => localStorage.getItem('chartLegendMode') || 'both')
+  function setMode(m) { setModeState(m); localStorage.setItem('chartLegendMode', m) }
+  return [mode, setMode]
+}
+function legendValue(value, pct, mode) {
+  const fmtD = '$' + Math.abs(value).toLocaleString('en-CA', { minimumFractionDigits: 0 })
+  if (mode === 'dollar') return fmtD
+  if (mode === 'pct')    return `${pct}%`
+  return `${fmtD} · ${pct}%`
+}
+
 const MONTHS = ['January','February','March','April','May','June',
                  'July','August','September','October','November','December']
 
@@ -57,7 +75,7 @@ function buildChartData(expenses, color) {
 
 const PALETTE = ['#2563eb','#16a34a','#dc2626','#7c3aed','#d97706','#0891b2','#94a3b8']
 
-export default function CategoryDetail() {
+export default function CategoryDetail({ user }) {
   const { name }   = useParams()
   const navigate   = useNavigate()
   const category   = decodeURIComponent(name)
@@ -69,6 +87,8 @@ export default function CategoryDetail() {
   const [loading, setLoading]     = useState(true)
   const [pendingDelete, setPendingDelete] = useState(null)
   const [editExpense, setEditExpense]     = useState(null)
+  const [showAddForm, setShowAddForm]     = useState(false)
+  const [mode, setMode]                   = useLegendMode()
 
   async function confirmDelete() {
     await deleteExpense(pendingDelete)
@@ -158,17 +178,37 @@ export default function CategoryDetail() {
           {/* Donut chart */}
           {chartData.length > 0 && (
             <div className="card chart-card" style={{marginBottom:16}}>
-              <div className="card-title">Breakdown by Merchant</div>
+              <div className="chart-card-header">
+                <div className="card-title" style={{marginBottom:0}}>Breakdown by Store</div>
+                <div className="legend-mode-toggle">
+                  {MODES.map(m => (
+                    <button key={m.id} className={`legend-mode-btn${mode===m.id?' active':''}`} onClick={() => setMode(m.id)}>{m.label}</button>
+                  ))}
+                </div>
+              </div>
               <div className="chart-wrap">
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value">
                       {chartData.map((_, i) => <Cell key={i} fill={PALETTE[i % PALETTE.length]} />)}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend formatter={v => <span style={{fontSize:'.73rem',color:'#1e293b'}}>{v}</span>} iconSize={8} iconType="circle" />
                   </PieChart>
                 </ResponsiveContainer>
+              </div>
+              {/* Custom legend with mode toggle */}
+              <div className="chart-legend">
+                {chartData.map((item, i) => {
+                  const total = chartData.reduce((s,d) => s+d.value, 0)
+                  const pct = total > 0 ? ((item.value/total)*100).toFixed(1) : '0.0'
+                  return (
+                    <div key={item.name} className="chart-legend-item">
+                      <span className="chart-legend-dot" style={{background: PALETTE[i % PALETTE.length]}} />
+                      <span className="chart-legend-name">{item.name}</span>
+                      <span className="chart-legend-value">{legendValue(item.value, pct, mode)}</span>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )}
@@ -186,10 +226,13 @@ export default function CategoryDetail() {
                     </div>
                     <div className="expense-info">
                       <div className="expense-desc">
-                        {e.description || category}
+                        {e.storeName || e.description || category}
                         {isRefund && <span className="refund-badge">↩ Refund</span>}
                       </div>
-                      <div className="expense-meta">{fmtDate(e.date)} · {e.addedBy?.split('@')[0]}</div>
+                      <div className="expense-meta">
+                        {fmtDate(e.date)} · {e.addedBy?.split('@')[0]}
+                        {e.description ? ` · ${e.description}` : ''}
+                      </div>
                     </div>
                     <div className={`expense-amount${isRefund ? ' refund-amount' : ''}`}>
                       {fmt(e.amount)}
@@ -226,6 +269,17 @@ export default function CategoryDetail() {
           user={{ email: editExpense.addedBy }}
           expense={editExpense}
           onClose={() => setEditExpense(null)}
+        />
+      )}
+
+      {/* FAB — pre-fills current category */}
+      <button className="fab" onClick={() => setShowAddForm(true)} title="Add expense">＋</button>
+
+      {showAddForm && (
+        <ExpenseForm
+          user={user}
+          defaultCategory={category}
+          onClose={() => setShowAddForm(false)}
         />
       )}
     </div>

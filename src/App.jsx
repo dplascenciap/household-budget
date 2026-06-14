@@ -50,7 +50,7 @@ export default function App() {
         <main className="main">
           <Routes>
             <Route path="/"                element={<Dashboard user={user} />} />
-            <Route path="/category/:name"  element={<CategoryDetail />} />
+            <Route path="/category/:name"  element={<CategoryDetail user={user} />} />
             <Route path="/weekly"          element={<WeeklyCheck />} />
           </Routes>
         </main>

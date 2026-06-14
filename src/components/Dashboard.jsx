@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { subscribeToExpenses } from '../firebase/db'
 import { MONTHLY_BUDGET, TOTAL_BUDGET } from '../data/budgets'
 import MonthSelector from './MonthSelector'
+import MonthProgress from './MonthProgress'
 import SummaryCards from './SummaryCards'
 import ChartPanel from './ChartPanel'
 import BudgetProgress from './BudgetProgress'
@@ -38,6 +39,7 @@ export default function Dashboard({ user }) {
   return (
     <>
       <MonthSelector month={month} onChange={setMonth} />
+      <MonthProgress month={month} />
 
       {loading ? (
         <div style={{textAlign:'center',padding:'48px',color:'#64748b'}}>Loading…</div>

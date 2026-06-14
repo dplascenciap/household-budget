@@ -1,11 +1,15 @@
 import {
   collection, addDoc, deleteDoc, doc, updateDoc,
   onSnapshot, query, where, serverTimestamp, getDocs,
+  getDoc, setDoc, arrayUnion,
 } from 'firebase/firestore'
 import { db, HOUSEHOLD_ID } from './config'
 
 const expensesRef = () =>
   collection(db, 'households', HOUSEHOLD_ID, 'expenses')
+
+const storeNamesRef = () =>
+  doc(db, 'households', HOUSEHOLD_ID, 'meta', 'storeNames')
 
 // Real-time listener for a given month (YYYY-MM)
 export function subscribeToExpenses(month, callback) {
@@ -33,28 +37,47 @@ export function subscribeToWeekExpenses(monday, sunday, callback) {
   })
 }
 
+// Load all known store names for autocomplete
+export async function loadStoreNames() {
+  const snap = await getDoc(storeNamesRef())
+  return snap.exists() ? (snap.data().names || []) : []
+}
+
+// Add a new store name to the list if not already present
+async function recordStoreName(name) {
+  const trimmed = name.trim()
+  if (!trimmed) return
+  await setDoc(storeNamesRef(), { names: arrayUnion(trimmed) }, { merge: true })
+}
+
 // Add a new expense (amount negative = refund)
-export async function addExpense({ amount, category, description, date, addedBy }) {
-  return addDoc(expensesRef(), {
+export async function addExpense({ amount, category, storeName, description, date, addedBy }) {
+  const sn = (storeName || '').trim()
+  await addDoc(expensesRef(), {
     amount:      parseFloat(amount),
     category:    category.trim(),
+    storeName:   sn,
     description: (description || '').trim(),
     date:        date.trim(),
     month:       date.trim().slice(0, 7),
     addedBy:     addedBy.trim(),
     createdAt:   serverTimestamp(),
   })
+  if (sn) await recordStoreName(sn)
 }
 
 // Update an existing expense
-export async function updateExpense(id, { amount, category, description, date }) {
-  return updateDoc(doc(db, 'households', HOUSEHOLD_ID, 'expenses', id), {
+export async function updateExpense(id, { amount, category, storeName, description, date }) {
+  const sn = (storeName || '').trim()
+  await updateDoc(doc(db, 'households', HOUSEHOLD_ID, 'expenses', id), {
     amount:      parseFloat(amount),
     category:    category.trim(),
+    storeName:   sn,
     description: (description || '').trim(),
     date:        date.trim(),
     month:       date.trim().slice(0, 7),
   })
+  if (sn) await recordStoreName(sn)
 }
 
 // Delete an expense by id
