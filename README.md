@@ -6,6 +6,33 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 
 ## Changelog
 
+### v1.6 — July 2026
+
+#### Features
+- **Month progress bar** — thin bar under the month selector showing Day X of Y and % elapsed; current month only
+- **Store Name field** — replaces Description as the primary identifier; autocomplete suggests previous store names as you type (prefix match from `meta/storeNames` Firestore list)
+- **Notes field** — optional free-text field alongside Store Name for additional context
+- **Category donut toggle** — `$` / `%` / `$+%` legend mode pills now in category detail page; preference shared with dashboard
+- **Category donut tooltip** — tapping a slice shows both dollar amount and percentage (e.g. `Farm Boy · $191 · 33.5%`)
+- **Add Expense in category** — ＋ FAB inside each category detail page pre-fills the current category
+- **Category renames** — Fixed Bills → Fixed Expenses + Utilities ($907); Groceries & Household → Groceries; Housing removed; Government & Legal merged into Other
+- **Other is now unbudgeted** — removed the $75 target; both Other and Emergency / Unexpected show as Unbudgeted
+- **serviceAccount.json added to .gitignore** — prevents accidental credential commits
+
+#### Bug fixes
+- 🐛 **Category donut showed "(no description)"** — now reads `storeName` field after v1.6 migration
+
+---
+
+### v1.5 — July 2026
+
+#### Features
+- **Legend mode toggle** — `$` / `%` / `$+%` pills in the donut chart header; preference saved in localStorage
+- **Red trash icon** — SVG trash can replaces the ✕ character on delete buttons
+- **Colourful app icon** — redesigned house icon with orange roof, cream walls, blue windows for iOS and Android home screens
+
+---
+
 ### v1.4 — July 2026
 
 #### Features

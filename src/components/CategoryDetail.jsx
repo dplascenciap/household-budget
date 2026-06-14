@@ -45,9 +45,11 @@ function monthLabel(month) {
 
 const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null
+  const { name, value } = payload[0]
+  const pct = payload[0].payload?.pct
   return (
     <div style={{background:'#fff',border:'1px solid #e2e8f0',borderRadius:8,padding:'8px 12px',fontSize:'.83rem',boxShadow:'0 2px 8px rgba(0,0,0,.1)'}}>
-      <strong>{payload[0].name}</strong><br/>{fmt(payload[0].value)}
+      <strong>{name}</strong><br/>{fmt(value)}{pct ? ` · ${pct}%` : ''}
     </div>
   )
 }
@@ -59,18 +61,21 @@ function buildChartData(expenses, color) {
     const key = e.storeName?.trim() || e.description?.trim() || '(no store name)'
     groups[key] = (groups[key] || 0) + e.amount
   })
-  const entries = Object.entries(groups)
+  const raw = Object.entries(groups)
     .map(([name, value]) => ({ name, value: Math.round(value*100)/100 }))
     .sort((a,b) => b.value - a.value)
 
   // Cap at 7 entries, group the rest as "Other"
-  if (entries.length > 7) {
-    const top = entries.slice(0, 6)
-    const rest = entries.slice(6).reduce((s,e) => s + e.value, 0)
-    top.push({ name: 'Other', value: Math.round(rest*100)/100 })
-    return top
-  }
-  return entries
+  const entries = raw.length > 7
+    ? [...raw.slice(0, 6), { name: 'Other', value: Math.round(raw.slice(6).reduce((s,e) => s+e.value, 0)*100)/100 }]
+    : raw
+
+  // Add percentage to each entry for tooltip
+  const total = entries.reduce((s,e) => s + e.value, 0)
+  return entries.map(e => ({
+    ...e,
+    pct: total > 0 ? ((e.value / total) * 100).toFixed(1) : '0.0',
+  }))
 }
 
 const PALETTE = ['#2563eb','#16a34a','#dc2626','#7c3aed','#d97706','#0891b2','#94a3b8']
