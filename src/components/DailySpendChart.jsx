@@ -56,7 +56,7 @@ export default function DailySpendChart({ expenses, month, totalBudget }) {
       {!hasData ? (
         <div className="empty-state">No expenses this month yet.</div>
       ) : (
-        <div className="chart-wrap">
+        <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
           <ResponsiveContainer width="100%" height={230}>
             <AreaChart data={data} margin={{ top: 12, right: 16, left: 0, bottom: 0 }}>
               <defs>

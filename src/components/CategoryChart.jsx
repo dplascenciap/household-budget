@@ -86,7 +86,7 @@ export default function CategoryChart({ expenses }) {
       </div>
 
       {/* Donut */}
-      <div className="chart-wrap">
+      <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
