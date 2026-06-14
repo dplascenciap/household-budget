@@ -22,8 +22,11 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 #### Bug fixes
 - 🐛 **Category donut showed "(no description)"** — now reads `storeName` field after v1.6 migration
 - 🐛 **FAB overlaps last transaction** — increased bottom padding on main content to clear the + button
-- 🐛 **Category donut requires double-tap on iOS** — added `isAnimationActive={false}` to Pie; first tap now shows tooltip immediately
-- 🐛 **Refund badge used Unicode arrow** — replaced `↩` with SVG return arrow icon
+- 🐛 **Chart tap requires double-tap (Android + iOS)** — replaced hover-based `<Tooltip>` with `onClick` on each slice; first tap works immediately on all devices; no animation delay (`isAnimationActive={false}`); tap wrapper/center to reset; no blue flash (`WebkitTapHighlightColor: transparent`)
+- 🐛 **Chart cannot be reset after tapping a slice** — tapping the donut center, the chart background, or the active legend item resets all slices to full opacity
+- 🐛 **Category page opens at wrong scroll position on Android** — added `ScrollToTop` component; navigating to any route now scrolls to top instantly, consistent with iOS behaviour
+- 🐛 **Refund badge** — removed icon entirely; green "Refund" pill badge is clear and works on all platforms without rendering issues
+- 🐛 **touch-action: manipulation applied to all chart wrappers** — prevents tap delay and blue highlight on Android and iOS
 
 ---
 
