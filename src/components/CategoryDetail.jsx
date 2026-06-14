@@ -191,10 +191,10 @@ export default function CategoryDetail({ user }) {
                   ))}
                 </div>
               </div>
-              <div className="chart-wrap">
+              <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
-                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2} dataKey="value" isAnimationActive={false}>
+                    <Pie data={chartData} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={2} dataKey="value">
                       {chartData.map((_, i) => <Cell key={i} fill={PALETTE[i % PALETTE.length]} />)}
                     </Pie>
                     <Tooltip content={<CustomTooltip />} />
