@@ -5,6 +5,7 @@ import { auth, ALLOWED_EMAILS } from './firebase/config'
 import Login from './components/Login'
 import Header from './components/Header'
 import BottomNav from './components/BottomNav'
+import ScrollToTop from './components/ScrollToTop'
 import Dashboard from './components/Dashboard'
 import CategoryDetail from './components/CategoryDetail'
 import WeeklyCheck from './components/WeeklyCheck'
@@ -45,6 +46,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div className="app-shell">
         <Header user={user} onSignOut={() => signOut(auth)} />
         <main className="main">
