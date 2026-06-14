@@ -75,8 +75,12 @@ export default function CategoryChart({ expenses }) {
         </div>
       </div>
 
-      {/* Donut — onClick replaces hover tooltip for reliable mobile tap */}
-      <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
+      {/* Donut — tap slice to highlight, tap wrapper/center to reset */}
+      <div
+        className="chart-wrap"
+        style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+        onClick={() => setActiveIdx(null)}
+      >
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
@@ -87,7 +91,8 @@ export default function CategoryChart({ expenses }) {
               outerRadius={85}
               paddingAngle={2}
               dataKey="value"
-              onClick={handleSliceClick}
+              isAnimationActive={false}
+              onClick={(_, index, e) => { e?.stopPropagation(); handleSliceClick(_, index) }}
               style={{ cursor: 'pointer' }}
             >
               {data.map((entry, i) => (
@@ -112,14 +117,14 @@ export default function CategoryChart({ expenses }) {
         }
       </div>
 
-      {/* Legend */}
+      {/* Legend — tap to highlight, tap active again to reset */}
       <div className="chart-legend">
         {data.map((item, i) => (
           <div
             key={item.name}
             className="chart-legend-item"
-            style={{ opacity: activeIdx === null || activeIdx === i ? 1 : 0.45, cursor: 'pointer' }}
-            onClick={() => handleSliceClick(null, i)}
+            style={{ opacity: activeIdx === null || activeIdx === i ? 1 : 0.45, cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+            onClick={(e) => { e.stopPropagation(); handleSliceClick(null, i) }}
           >
             <span className="chart-legend-dot" style={{ background: item.color }} />
             <span className="chart-legend-name">{item.name}</span>

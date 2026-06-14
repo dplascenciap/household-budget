@@ -182,7 +182,11 @@ export default function CategoryDetail({ user }) {
                   ))}
                 </div>
               </div>
-              <div className="chart-wrap" style={{ touchAction: 'manipulation' }}>
+              <div
+                className="chart-wrap"
+                style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+                onClick={() => setActiveIdx(null)}
+              >
                 <ResponsiveContainer width="100%" height={200}>
                   <PieChart>
                     <Pie
@@ -190,7 +194,8 @@ export default function CategoryDetail({ user }) {
                       cx="50%" cy="50%"
                       innerRadius={55} outerRadius={85}
                       paddingAngle={2} dataKey="value"
-                      onClick={(_, index) => setActiveIdx(prev => prev === index ? null : index)}
+                      isAnimationActive={false}
+                      onClick={(_, index, e) => { e?.stopPropagation(); setActiveIdx(prev => prev === index ? null : index) }}
                       style={{ cursor: 'pointer' }}
                     >
                       {chartData.map((_, i) => (
@@ -224,8 +229,8 @@ export default function CategoryDetail({ user }) {
                     <div
                       key={item.name}
                       className="chart-legend-item"
-                      style={{ opacity: activeIdx === null || activeIdx === i ? 1 : 0.45, cursor: 'pointer' }}
-                      onClick={() => setActiveIdx(prev => prev === i ? null : i)}
+                      style={{ opacity: activeIdx === null || activeIdx === i ? 1 : 0.45, cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+                      onClick={(e) => { e.stopPropagation(); setActiveIdx(prev => prev === i ? null : i) }}
                     >
                       <span className="chart-legend-dot" style={{background: PALETTE[i % PALETTE.length]}} />
                       <span className="chart-legend-name">{item.name}</span>
@@ -251,14 +256,7 @@ export default function CategoryDetail({ user }) {
                     <div className="expense-info">
                       <div className="expense-desc">
                         {e.storeName || e.description || category}
-                        {isRefund && (
-                          <span className="refund-badge">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{marginRight:3,verticalAlign:'middle'}}>
-                              <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
-                            </svg>
-                            Refund
-                          </span>
-                        )}
+                        {isRefund && <span className="refund-badge">Refund</span>}
                       </div>
                       <div className="expense-meta">
                         {fmtDate(e.date)} · {e.addedBy?.split('@')[0]}
