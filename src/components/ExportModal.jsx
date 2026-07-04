@@ -37,10 +37,10 @@ function getMonthsInRange(from, to) {
   return months
 }
 
-function applyFilters(expenses, f, cats) {
+function applyFilters(expenses, f, cats, cards) {
   const today = new Date().toISOString().slice(0, 10)
   return expenses.filter(e => {
-    if (e.date > today) return false                                      // never include future entries
+    if (e.date > today) return false
     const text = `${e.storeName || ''} ${e.description || ''} ${e.category}`.toLowerCase()
     if (f.search && !text.includes(f.search.toLowerCase())) return false
     const amt = Math.abs(e.amount)
@@ -49,6 +49,7 @@ function applyFilters(expenses, f, cats) {
     if (f.dateFrom && e.date < f.dateFrom) return false
     if (f.dateTo   && e.date > f.dateTo)   return false
     if (cats.length > 0 && !cats.includes(e.category)) return false
+    if (cards.length > 0 && !cards.includes(e.card || 'Not Provided')) return false
     return true
   })
 }
@@ -56,12 +57,13 @@ function applyFilters(expenses, f, cats) {
 function downloadCSV(expenses, fromMonth, toMonth) {
   const sorted = [...expenses].sort((a, b) => (a.date < b.date ? 1 : -1))
 
-  const headers = ['Date','Store Name','Notes','Category','Amount ($)','Type','Added By']
+  const headers = ['Date','Store Name','Notes','Category','Card','Amount ($)','Type','Added By']
   const rows = sorted.map(e => [
     e.date,
     `"${(e.storeName || '').replace(/"/g, '""')}"`,
     `"${(e.description || '').replace(/"/g, '""')}"`,
     `"${e.category}"`,
+    `"${e.card || 'Not Provided'}"`,
     Math.abs(e.amount).toFixed(2),
     e.amount < 0 ? 'Refund' : 'Expense',
     e.addedBy?.split('@')[0] || '',
@@ -101,7 +103,7 @@ function downloadCSV(expenses, fromMonth, toMonth) {
   URL.revokeObjectURL(url)
 }
 
-export default function ExportModal({ filters, selectedCats, onClose }) {
+export default function ExportModal({ filters, selectedCats, selectedCards = [], onClose }) {
   const cm = currentMonth()
   const [fromMonth, setFromMonth] = useState(cm)
   const [toMonth, setToMonth]     = useState(cm)
@@ -118,7 +120,7 @@ export default function ExportModal({ filters, selectedCats, onClose }) {
     try {
       const months   = getMonthsInRange(fromMonth, toMonth)
       const all      = await fetchExpensesForMonths(months)
-      const filtered = applyFilters(all, filters, selectedCats)
+      const filtered = applyFilters(all, filters, selectedCats, selectedCards)
       if (!filtered.length) {
         setError('No transactions found for this range.')
         setLoading(false)

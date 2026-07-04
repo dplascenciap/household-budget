@@ -51,7 +51,7 @@ async function recordStoreName(name) {
 }
 
 // Add a new expense (amount negative = refund)
-export async function addExpense({ amount, category, storeName, description, date, addedBy }) {
+export async function addExpense({ amount, category, storeName, description, date, addedBy, card }) {
   const sn = (storeName || '').trim()
   await addDoc(expensesRef(), {
     amount:      parseFloat(amount),
@@ -61,13 +61,14 @@ export async function addExpense({ amount, category, storeName, description, dat
     date:        date.trim(),
     month:       date.trim().slice(0, 7),
     addedBy:     addedBy.trim(),
+    card:        (card || 'Not Provided').trim(),
     createdAt:   serverTimestamp(),
   })
   if (sn) await recordStoreName(sn)
 }
 
 // Update an existing expense
-export async function updateExpense(id, { amount, category, storeName, description, date }) {
+export async function updateExpense(id, { amount, category, storeName, description, date, card }) {
   const sn = (storeName || '').trim()
   await updateDoc(doc(db, 'households', HOUSEHOLD_ID, 'expenses', id), {
     amount:      parseFloat(amount),
@@ -76,6 +77,7 @@ export async function updateExpense(id, { amount, category, storeName, descripti
     description: (description || '').trim(),
     date:        date.trim(),
     month:       date.trim().slice(0, 7),
+    card:        (card || 'Not Provided').trim(),
   })
   if (sn) await recordStoreName(sn)
 }

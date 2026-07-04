@@ -3,7 +3,7 @@ import { CATEGORIES, MONTHLY_BUDGET, CATEGORY_COLORS } from '../data/budgets'
 
 function fmt(n) { return '$' + n.toLocaleString('en-CA', { minimumFractionDigits: 0 }) }
 
-export default function BudgetProgress({ expenses, hideRent }) {
+export default function BudgetProgress({ expenses, hideRent, month }) {
   const navigate = useNavigate()
   const spent = expenses.reduce((acc, e) => {
     acc[e.category] = (acc[e.category] || 0) + e.amount
@@ -35,7 +35,7 @@ export default function BudgetProgress({ expenses, hideRent }) {
             <div
               key={cat}
               className="progress-item clickable"
-              onClick={() => navigate(`/category/${encodeURIComponent(cat)}`)}
+              onClick={() => navigate(`/category/${encodeURIComponent(cat)}${month ? `?month=${month}` : ''}`)}
               title={`View ${cat} details`}
             >
               <div className="progress-header">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { addExpense, updateExpense, loadStoreNames } from '../firebase/db'
-import { CATEGORIES } from '../data/budgets'
+import { CATEGORIES, CARDS } from '../data/budgets'
 
 function today() { return new Date().toISOString().slice(0, 10) }
 
@@ -15,6 +15,7 @@ export default function ExpenseForm({ user, onClose, expense, defaultCategory })
     storeName:   isEdit ? (expense.storeName || '') : '',
     description: isEdit ? (expense.description || '') : '',
     date:        isEdit ? expense.date : today(),
+    card:        isEdit ? (expense.card || 'Not Provided') : 'Not Provided',
   })
   const [saving, setSaving]       = useState(false)
   const [error, setError]         = useState('')
@@ -152,6 +153,23 @@ export default function ExpenseForm({ user, onClose, expense, defaultCategory })
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Card used */}
+            <div className="form-group">
+              <label className="form-label">Card Used</label>
+              <div className="card-pills">
+                {CARDS.map(c => (
+                  <button
+                    key={c}
+                    type="button"
+                    className={`card-pill${form.card === c ? ' active' : ''}`}
+                    onClick={() => update('card', c)}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Notes */}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 import { subscribeToExpenses, deleteExpense } from '../firebase/db'
 import { MONTHLY_BUDGET, CATEGORY_COLORS } from '../data/budgets'
@@ -71,13 +71,14 @@ function buildChartData(expenses, color) {
 const PALETTE = ['#2563eb','#16a34a','#dc2626','#7c3aed','#d97706','#0891b2','#94a3b8']
 
 export default function CategoryDetail({ user }) {
-  const { name }   = useParams()
-  const navigate   = useNavigate()
+  const { name }       = useParams()
+  const navigate       = useNavigate()
+  const [searchParams] = useSearchParams()
   const category   = decodeURIComponent(name)
   const color      = CATEGORY_COLORS[category] || '#94a3b8'
   const budget     = MONTHLY_BUDGET[category] || 0
 
-  const [month, setMonth]         = useState(currentMonth)
+  const [month, setMonth]         = useState(() => searchParams.get('month') || currentMonth())
   const [expenses, setExpenses]   = useState([])
   const [loading, setLoading]     = useState(true)
   const [pendingDelete, setPendingDelete] = useState(null)

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { deleteExpense } from '../firebase/db'
-import { CATEGORY_COLORS } from '../data/budgets'
+import { CATEGORY_COLORS, CARDS } from '../data/budgets'
 import ConfirmDialog from './ConfirmDialog'
 import ExpenseForm from './ExpenseForm'
 import ExportModal from './ExportModal'
@@ -19,11 +19,11 @@ function initials(cat) { return cat.split(' ').map(w => w[0]).join('').slice(0, 
 
 const EMPTY_FILTERS = { search: '', minAmount: '', maxAmount: '', dateFrom: '', dateTo: '' }
 
-function hasActiveFilters(f, cats) {
-  return Object.values(f).some(v => v !== '') || cats.length > 0
+function hasActiveFilters(f, cats, cards) {
+  return Object.values(f).some(v => v !== '') || cats.length > 0 || cards.length > 0
 }
 
-function applyFilters(expenses, f, cats) {
+function applyFilters(expenses, f, cats, cards) {
   return expenses.filter(e => {
     const text = `${e.storeName || ''} ${e.description || ''} ${e.category}`.toLowerCase()
     if (f.search && !text.includes(f.search.toLowerCase())) return false
@@ -33,6 +33,7 @@ function applyFilters(expenses, f, cats) {
     if (f.dateFrom && e.date < f.dateFrom) return false
     if (f.dateTo   && e.date > f.dateTo)   return false
     if (cats.length > 0 && !cats.includes(e.category)) return false
+    if (cards.length > 0 && !cards.includes(e.card || 'Not Provided')) return false
     return true
   })
 }
@@ -42,6 +43,7 @@ export default function ExpenseList({ expenses, user }) {
   const [editExpense, setEditExpense]     = useState(null)
   const [showFilter, setShowFilter]         = useState(false)
   const [showExport, setShowExport]         = useState(false)
+  const [selectedCards, setSelectedCards]   = useState([])
   const [filters, setFilters]               = useState(EMPTY_FILTERS)
   const [selectedCats, setSelectedCats]     = useState([])
 
@@ -65,13 +67,18 @@ export default function ExpenseList({ expenses, user }) {
     )
   }
 
+  function toggleCard(card) {
+    setSelectedCards(prev => prev.includes(card) ? prev.filter(c => c !== card) : [...prev, card])
+  }
+
   function clearFilters() {
     setFilters(EMPTY_FILTERS)
     setSelectedCats([])
+    setSelectedCards([])
   }
 
-  const active   = hasActiveFilters(filters, selectedCats)
-  const filtered = applyFilters(expenses, filters, selectedCats)
+  const active   = hasActiveFilters(filters, selectedCats, selectedCards)
+  const filtered = applyFilters(expenses, filters, selectedCats, selectedCards)
 
   return (
     <>
@@ -110,6 +117,23 @@ export default function ExpenseList({ expenses, user }) {
 
         {/* Filter panel */}
         <div className={`filter-panel${showFilter ? ' open' : ''}`}>
+          {/* Card filter pills */}
+          <div className="filter-field full-width" style={{marginBottom:12}}>
+            <label className="form-label">Card</label>
+            <div className="filter-cat-pills">
+              {CARDS.map(card => (
+                <button
+                  key={card}
+                  className={`filter-cat-pill${selectedCards.includes(card) ? ' active' : ''}`}
+                  style={selectedCards.includes(card) ? { background: '#64748b', borderColor: '#64748b' } : {}}
+                  onClick={() => toggleCard(card)}
+                >
+                  {card}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Category pills */}
           {availableCats.length > 0 && (
             <div className="filter-field full-width" style={{marginBottom:12}}>
@@ -214,6 +238,7 @@ export default function ExpenseList({ expenses, user }) {
                     </div>
                     <div className="expense-meta">
                       {fmtDate(e.date)} · {e.category} · {e.addedBy?.split('@')[0]}
+                      {e.card && e.card !== 'Not Provided' ? ` · ${e.card}` : ''}
                       {e.description ? ` · ${e.description}` : ''}
                     </div>
                   </div>
@@ -258,6 +283,7 @@ export default function ExpenseList({ expenses, user }) {
         <ExportModal
           filters={filters}
           selectedCats={selectedCats}
+          selectedCards={selectedCards}
           onClose={() => setShowExport(false)}
         />
       )}

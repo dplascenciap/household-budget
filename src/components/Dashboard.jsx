@@ -55,7 +55,7 @@ export default function Dashboard({ user }) {
               hideRent={hideRent}
               onToggleHideRent={() => setHideRent(h => !h)}
             />
-            <BudgetProgress expenses={expenses} hideRent={hideRent} />
+            <BudgetProgress expenses={expenses} hideRent={hideRent} month={month} />
           </div>
 
           <ExpenseList expenses={expenses} user={user} />

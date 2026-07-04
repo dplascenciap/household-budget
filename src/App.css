@@ -717,6 +717,31 @@ body {
   letter-spacing: .2px;
 }
 
+/* ── Card pills (expense form) ──────────────────────────────── */
+.card-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.card-pill {
+  padding: 5px 12px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.card-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.card-pill:hover:not(.active) { background: var(--border); }
+
 /* ── Autocomplete ───────────────────────────────────────────── */
 .autocomplete-dropdown {
   position: absolute;

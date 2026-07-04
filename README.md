@@ -6,6 +6,25 @@ A real-time household expense tracker built with Vite + React + Firebase Firesto
 
 ## Changelog
 
+### v1.7 — July 2026
+
+#### Features
+- **Card field** — every expense now records which card was used (AMEX, Costco CIBC, TD David, TD Miranda, Not Provided); shown as pill selector in the add/edit form
+- **Card filter** — filter transactions by card in the dashboard filter panel; multi-select pills
+- **Card in CSV export** — Card column added between Category and Amount
+- **Card in expense meta** — card name shown in each transaction row (only if not "Not Provided")
+- **Budget targets updated** — Personal Care reduced to $200 (June actual $172); KOHO Savings updated to $3,680 (semi-monthly goals: Baby $750 + Travel $571 + Taxes $261 + Moving $1,429 + Kia $669)
+
+#### Bug fixes
+- 🐛 **Category detail opens wrong month** — clicking Transportation in June now opens Transportation for June, not the current month; month passed via URL query param
+
+#### Financial notes
+- Kia KOHO goal paused — make lump sum (~$6,650) in October from accumulated savings, then switch to direct bi-weekly extra principal payments; goal will not reach $10,000 target by October but direct payments are mathematically superior at 9.24% vs KOHO savings rate
+- Moving Fund reduced to ~$800/month from August to absorb the $3,000 work benefit income gap; still on track for $20,000 by May 2027
+- June exceptional costs: $2,445 in green card paperwork will not recur monthly
+
+---
+
 ### v1.6 — July 2026
 
 #### Features
