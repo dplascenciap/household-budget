@@ -28,7 +28,7 @@ export const CARDS = [
 
 // 0 = unbudgeted (irregular). These show as "Unbudgeted" in the UI.
 export const MONTHLY_BUDGET = {
-  'Rent':                         2680,
+  'Rent':                         2780,   // new lease July 2026–June 2027: $2,630 + $50 increase + $100 locker
   'Transportation':                590,
   'Groceries':                     900,
   'Dining Out':                    550,
