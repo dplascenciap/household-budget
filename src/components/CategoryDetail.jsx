@@ -55,10 +55,7 @@ function buildChartData(expenses, color) {
     .map(([name, value]) => ({ name, value: Math.round(value*100)/100 }))
     .sort((a,b) => b.value - a.value)
 
-  // Cap at 7 entries, group the rest as "Other"
-  const entries = raw.length > 7
-    ? [...raw.slice(0, 6), { name: 'Other', value: Math.round(raw.slice(6).reduce((s,e) => s+e.value, 0)*100)/100 }]
-    : raw
+  const entries = raw
 
   // Add percentage to each entry for tooltip
   const total = entries.reduce((s,e) => s + e.value, 0)
