@@ -344,6 +344,40 @@ In both the dashboard donut chart and category detail donut chart, a `$` / `%` /
 
 ## 11. Common Changes
 
+### Add a new user to the app
+
+There are **three places** to update. Miss any one and the new user will be blocked.
+
+**Step 1 — `src/firebase/config.js`** (client-side allow list)
+```js
+export const ALLOWED_EMAILS = [
+  'dplascenciap@gmail.com',
+  'miranda.frisbee@gmail.com',
+  'newuser@gmail.com',       // ← add here
+]
+```
+
+**Step 2 — `firestore.rules`** (server-side database access)
+```js
+request.auth.token.email in [
+  'dplascenciap@gmail.com',
+  'miranda.frisbee@gmail.com',
+  'newuser@gmail.com'        // ← add here
+];
+```
+
+**Step 3 — Firebase Console** (paste the updated rules)
+1. Go to https://console.firebase.google.com
+2. Select project → Firestore Database → Rules tab
+3. Replace the existing rules with the full contents of `firestore.rules`
+4. Click Publish
+
+**Step 4 — commit and push** `src/firebase/config.js` and `firestore.rules`
+
+Note: `firestore.rules` is a local copy for reference. The live rules are what's published in the Firebase Console. Always keep both in sync.
+
+---
+
 ### Change a monthly budget target
 Edit `src/data/budgets.js` → `MONTHLY_BUDGET`. Change the number. Commit and push.
 
