@@ -2,6 +2,8 @@
 
 A real-time household expense tracker built with Vite + React + Firebase Firestore.
 
+> **Read `project_description/DEVELOPER_GUIDE.md` before doing anything.**
+
 ---
 
 ## Changelog

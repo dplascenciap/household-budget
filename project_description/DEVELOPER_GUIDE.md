@@ -1,6 +1,6 @@
 # Household Budget App — Developer Guide
 
-> This guide is the single source of truth for any developer or AI assistant picking up this project.
+> **Start here.** This is the single file to read before making any changes to this project.
 > It covers the full tech stack, project structure, every feature, and how to make common changes.
 > Last updated: 2026-09-27 · Current version: v1.7.1
 
@@ -164,17 +164,49 @@ Output goes to `dist/`. Vercel runs this automatically on deploy.
 
 ## 8. How to Deploy
 
-Deployment is automatic: push to `main` → Vercel builds and deploys.
+Deployment is automatic: push to `main` → Vercel builds and deploys within ~30 seconds.
 
-```bash
-git add <files>
-git commit -m "your message"
+### Full git workflow (run in PowerShell)
+
+```powershell
+# 1. Navigate to the project folder
+cd "C:\Users\dplas\Desktop\Projects\Personal\Budget"
+
+# 2. Check what has changed
+git status
+
+# 3. Stage specific files (preferred over git add -A to avoid accidents)
+git add src/components/SomeComponent.jsx src/data/budgets.js
+
+# 4. Commit with a clear message
+git commit -m "feat: describe what you added"
+# or
+git commit -m "fix: describe what you fixed"
+
+# 5. Push to GitHub — Vercel picks this up automatically
 git push
 ```
 
-Vercel is connected to the GitHub repo. No manual deploy command needed.
+### Commit message conventions used in this project
+- `feat:` — new feature
+- `fix:` — bug fix or correction
+- `chore:` — housekeeping (dependency update, gitignore, etc.)
 
-**After adding a new environment variable:** Go to Vercel dashboard → Project → Settings → Environment Variables → add it there too. Then redeploy.
+### GitHub authentication
+Git is authenticated via Git Credential Manager (GCM) on this Windows machine. The first `git push` may open a browser window to confirm — approve it and it will not ask again for that session.
+
+**Never paste GitHub tokens into chat.** If a token is needed, run the git command yourself in the terminal.
+
+### After adding a new environment variable
+Go to Vercel dashboard → Project → Settings → Environment Variables → add it there too, then redeploy (or the next `git push` will trigger a fresh deploy with the new variable).
+
+### Files that must never be committed
+- `.env` — Firebase API keys
+- `serviceAccount.json` — Firebase Admin credentials (full database access)
+
+Both are in `.gitignore`. If either is accidentally committed, rotate the credentials immediately:
+- `.env`: regenerate Firebase API keys in Firebase Console
+- `serviceAccount.json`: delete the key in Firebase Console → Project Settings → Service Accounts, generate a new one
 
 ---
 
