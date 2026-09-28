@@ -883,6 +883,19 @@ body {
 }
 .filter-clear-btn:hover { background: var(--border); }
 
+.filter-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 8px;
+}
+.filter-summary-row .filter-clear-btn { margin-top: 0; }
+.filter-summary-total {
+  font-size: .82rem;
+  color: var(--text-muted);
+}
+
 /* ── Edit + refund styles ───────────────────────────────────── */
 .expense-actions {
   display: flex;

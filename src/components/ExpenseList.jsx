@@ -77,8 +77,9 @@ export default function ExpenseList({ expenses, user }) {
     setSelectedCards([])
   }
 
-  const active   = hasActiveFilters(filters, selectedCats, selectedCards)
-  const filtered = applyFilters(expenses, filters, selectedCats, selectedCards)
+  const active      = hasActiveFilters(filters, selectedCats, selectedCards)
+  const filtered    = applyFilters(expenses, filters, selectedCats, selectedCards)
+  const filteredNet = filtered.reduce((s, e) => s + e.amount, 0)
 
   return (
     <>
@@ -208,9 +209,17 @@ export default function ExpenseList({ expenses, user }) {
             </div>
           </div>
           {active && (
-            <button className="filter-clear-btn" onClick={clearFilters}>
-              ✕ Clear filters
-            </button>
+            <div className="filter-summary-row">
+              <span className="filter-summary-total">
+                {filtered.length} of {expenses.length} transactions · net{' '}
+                <strong style={{ color: filteredNet < 0 ? 'var(--success)' : 'inherit' }}>
+                  {fmt(filteredNet)}
+                </strong>
+              </span>
+              <button className="filter-clear-btn" onClick={clearFilters}>
+                ✕ Clear
+              </button>
+            </div>
           )}
         </div>
 
